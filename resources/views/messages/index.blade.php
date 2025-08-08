@@ -279,7 +279,7 @@
                                             rows="1"
                                             required></textarea>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-paper-plane"></i>
+                                           <i class="icofont-airplane-alt"></i>
                                         </button>
                                     </div>
                                 </form>

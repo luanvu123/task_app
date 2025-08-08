@@ -9,6 +9,7 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon-->
     <!-- project css file  -->
     <link rel="stylesheet" href="{{ asset('assets/css/my-task.style.min.css')}}">
+       <link rel="stylesheet" href="{{ asset('assets/css/theme-styles.css')}}">
 </head>
 
 <body data-mytask="theme-indigo">
@@ -85,7 +86,8 @@
                                         Employees</span></a></li>
                             <li><a class="ms-link" href="attendance.html"> <span>Attendance</span></a></li>
                             <li><a class="ms-link" href="leave-request.html"> <span>Leave Request</span></a></li>
-                            <li><a class="ms-link" href="{{route('departments.index')}}"> <span>Department</span></a></li>
+                            <li><a class="ms-link" href="{{route('departments.index')}}"> <span>Department</span></a>
+                            </li>
                             <li><a class="ms-link" href="loan.html"> <span>Loan</span></a></li>
                         </ul>
                     </li>
@@ -119,7 +121,8 @@
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="app-Components">
                             <li><a class="ms-link" href="calendar.html"> <span>Lịch</span></a></li>
-                            <li><a class="ms-link" href="{{route('messages.index')}}"><span>Ứng dụng Chat</span></a></li>
+                            <li><a class="ms-link" href="{{route('messages.index')}}"><span>Ứng dụng Chat</span></a>
+                            </li>
                         </ul>
                     </li>
                     <li class="collapsed">
@@ -278,7 +281,8 @@
                                                             <div class="flex-fill ms-2">
                                                                 <p class="d-flex justify-content-between mb-0 "><span
                                                                         class="font-weight-bold">Zoe Wright</span>
-                                                                    <small class="">1DAY</small></p>
+                                                                    <small class="">1DAY</small>
+                                                                </p>
                                                                 <span class="">Add Calander Event</span>
                                                             </div>
                                                         </a>
@@ -417,7 +421,7 @@
                     </ul>
                 </div>
                 <div class="mb-4 flex-grow-1">
-                    <h6>Set Theme Light/Dark/RTL</h6>
+                    <h6>Set Theme Light/Dark</h6>
                     <!-- Theme: Switch Theme -->
                     <ul class="list-unstyled mb-0">
                         <li>
@@ -426,12 +430,7 @@
                                 <label class="form-check-label mx-2" for="theme-switch">Enable Dark Mode!</label>
                             </div>
                         </li>
-                        <li>
-                            <div class="form-check form-switch theme-rtl">
-                                <input class="form-check-input fs-6" type="checkbox" role="switch" id="theme-rtl">
-                                <label class="form-check-label mx-2" for="theme-rtl">Enable RTL Mode!</label>
-                            </div>
-                        </li>
+
                         <li>
                             <div class="form-check form-switch monochrome-toggle">
                                 <input class="form-check-input fs-6" type="checkbox" role="switch" id="monochrome">
@@ -454,6 +453,7 @@
     <!-- Jquery Page Js -->
     <script src="{{ asset('js/template.js') }}"></script>
     <script src="{{ asset('js/page/hr.js') }}"></script>
+    <script src="{{ asset('js/page/theme-settings.js') }}"></script>
 </body>
 
 </html>

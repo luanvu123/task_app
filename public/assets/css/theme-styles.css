@@ -1,0 +1,153 @@
+/* Theme Color Variables */
+:root {
+    --mytask-theme-color: #6238B3; /* Default PurpleHeart */
+    --text-color: #333;
+    --bg-color: #ffffff;
+    --border-color: #dee2e6;
+}
+
+/* Theme Color Definitions */
+[data-theme="ValenciaRed"] {
+    --mytask-theme-color: #D63B38;
+}
+
+[data-theme="SunOrange"] {
+    --mytask-theme-color: #F7A614;
+}
+
+[data-theme="AppleGreen"] {
+    --mytask-theme-color: #5BC43A;
+}
+
+[data-theme="CeruleanBlue"] {
+    --mytask-theme-color: #00B8D6;
+}
+
+[data-theme="Mariner"] {
+    --mytask-theme-color: #0066FE;
+}
+
+[data-theme="PurpleHeart"] {
+    --mytask-theme-color: #6238B3;
+}
+
+[data-theme="FrenchRose"] {
+    --mytask-theme-color: #EB5393;
+}
+
+/* Dark Mode Styles */
+.dark-mode,
+[data-theme-mode="dark"] {
+    --text-color: #ffffff;
+    --bg-color: #1a1a1a;
+    --border-color: #404040;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.dark-mode body,
+[data-theme-mode="dark"] body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.dark-mode .offcanvas,
+[data-theme-mode="dark"] .offcanvas {
+    background-color: #2d2d2d;
+    color: var(--text-color);
+}
+
+.dark-mode .offcanvas-header,
+[data-theme-mode="dark"] .offcanvas-header {
+    border-bottom-color: var(--border-color);
+}
+
+/* Monochrome Mode Styles */
+.monochrome-mode,
+[data-monochrome="true"] {
+    filter: grayscale(100%);
+}
+
+.monochrome-mode .choose-skin li div,
+[data-monochrome="true"] .choose-skin li div {
+    filter: grayscale(0) !important; /* Keep color picker visible */
+}
+
+/* Theme Color Picker Styles */
+.choose-skin {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+
+.choose-skin li {
+    list-style: none;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 2px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.choose-skin li:hover {
+    transform: scale(1.1);
+    border-color: #ddd;
+}
+
+.choose-skin li.active {
+    border-color: var(--mytask-theme-color);
+    box-shadow: 0 0 0 2px rgba(98, 56, 179, 0.3);
+}
+
+.choose-skin li div {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background-color: var(--mytask-theme-color);
+    transition: all 0.3s ease;
+}
+
+/* Form Switch Styles */
+.theme-switch .form-check-input:checked {
+    background-color: var(--mytask-theme-color);
+    border-color: var(--mytask-theme-color);
+}
+
+.monochrome-toggle .form-check-input:checked {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Apply theme color to elements */
+.btn-primary,
+.bg-primary {
+    background-color: var(--mytask-theme-color) !important;
+    border-color: var(--mytask-theme-color) !important;
+}
+
+.text-primary {
+    color: var(--mytask-theme-color) !important;
+}
+
+.border-primary {
+    border-color: var(--mytask-theme-color) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .choose-skin {
+        justify-content: center;
+    }
+
+    .choose-skin li div {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+/* Animation for theme transitions */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
