@@ -297,27 +297,29 @@
                             </div>
                             <div class="dropdown user-profile ml-2 ml-sm-3 d-flex align-items-center">
                                 <div class="u-info me-2">
-                                    <p class="mb-0 text-end line-height-sm "><span class="font-weight-bold">Dylan
-                                            Hunter</span></p>
-                                    <small>Admin Profile</small>
+                                    <p class="mb-0 text-end line-height-sm "><span class="font-weight-bold">{{ Auth::user()->name }}</span></p>
+                                    <small>{{ Auth::user()->role->name ?? 'User' }} Profile</small>
                                 </div>
                                 <a class="nav-link dropdown-toggle pulse p-0" href="#" role="button"
                                     data-bs-toggle="dropdown" data-bs-display="static">
-                                    <img class="avatar lg rounded-circle img-thumbnail"
-                                        src="{{ asset('assets/images/profile_av.png') }}" alt="profile">
+                                     <img class="avatar lg rounded-circle img-thumbnail"
+                src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('assets/images/profile_av.png') }}"
+                alt="profile">
                                 </a>
                                 <div
                                     class="dropdown-menu rounded-lg shadow border-0 dropdown-animation dropdown-menu-end p-0 m-0">
                                     <div class="card border-0 w280">
                                         <div class="card-body pb-0">
                                             <div class="d-flex py-1">
-                                                <img class="avatar rounded-circle"
-                                                    src="{{ asset('assets/images/profile_av.png') }}" alt="profile">
-                                                <div class="flex-fill ms-3">
-                                                    <p class="mb-0"><span class="font-weight-bold">Dylan Hunter</span>
-                                                    </p>
-                                                    <small class="">Dylan.hunter@gmail.com</small>
-                                                </div>
+                                                 <img class="avatar rounded-circle"
+                            src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('assets/images/profile_av.png') }}"
+                            alt="profile">
+                                               <div class="flex-fill ms-3">
+                            <p class="mb-0">
+                                <span class="font-weight-bold">{{ Auth::user()->name }}</span>
+                            </p>
+                            <small>{{ Auth::user()->email }}</small>
+                        </div>
                                             </div>
 
                                             <div>
@@ -328,12 +330,15 @@
                                             <a href="task.html"
                                                 class="list-group-item list-group-item-action border-0 "><i
                                                     class="icofont-tasks fs-5 me-3"></i>My Task</a>
-                                            <a href="members.html"
-                                                class="list-group-item list-group-item-action border-0 "><i
-                                                    class="icofont-ui-user-group fs-6 me-3"></i>members</a>
-                                            <a href="ui-elements/auth-signin.html"
-                                                class="list-group-item list-group-item-action border-0 "><i
-                                                    class="icofont-logout fs-6 me-3"></i>Signout</a>
+ <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action border-0">
+                        <i class="icofont-ui-user-group fs-6 me-3"></i>Members
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="list-group-item list-group-item-action border-0">
+                            <i class="icofont-logout fs-6 me-3"></i>Signout
+                        </button>
+                    </form>
                                             <div>
                                                 <hr class="dropdown-divider border-dark">
                                             </div>

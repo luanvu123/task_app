@@ -279,4 +279,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Department::class, 'department_head_id');
     }
+      public function isDepartmentHead()
+    {
+        return $this->managedDepartment()->exists();
+    }
+     public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id')
+                    ->withPivot('role', 'joined_at')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Quan hệ với Project (User quản lý dự án)
+     */
+    public function managedProjects()
+    {
+        return $this->hasMany(Project::class, 'manager_id');
+    }
 }
