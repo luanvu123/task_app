@@ -173,9 +173,50 @@ class UserController extends Controller
      */
     public function show($id): View
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
-        return view('users.show',compact('user'));
+        // Lấy danh sách roles của user
+        $userRoles = $user->getRoleNames();
+
+        return view('users.show', compact('user', 'userRoles'));
+    }
+
+    public function updatePersonalInfo(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'nationality' => 'nullable|string|max:100',
+            'religion' => 'nullable|string|max:100',
+            'marital_status' => 'nullable|in:single,married,divorced,widowed',
+            'passport_no' => 'nullable|string|max:20',
+            'emergency_contact' => 'nullable|string|max:20',
+        ]);
+
+        $user->update($request->only([
+            'nationality', 'religion', 'marital_status', 'passport_no', 'emergency_contact'
+        ]));
+
+        return redirect()->back()->with('success', 'Thông tin cá nhân đã được cập nhật thành công!');
+    }
+
+    public function updateBankInfo(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'bank_name' => 'nullable|string|max:100',
+            'account_no' => 'nullable|string|max:30',
+            'ifsc_code' => 'nullable|string|max:11',
+            'pan_no' => 'nullable|string|max:10',
+            'upi_id' => 'nullable|string|max:100',
+        ]);
+
+        $user->update($request->only([
+            'bank_name', 'account_no', 'ifsc_code', 'pan_no', 'upi_id'
+        ]));
+
+        return redirect()->back()->with('success', 'Thông tin ngân hàng đã được cập nhật thành công!');
     }
 
 
