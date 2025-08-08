@@ -77,8 +77,8 @@ class Project extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'project_users', 'project_id', 'user_id')
-                    ->withPivot('role', 'joined_at')
-                    ->withTimestamps();
+            ->withPivot('role', 'joined_at')
+            ->withTimestamps();
     }
 
     /**
@@ -166,5 +166,62 @@ class Project extends Model
             self::PRIORITY_URGENT => 'Khẩn cấp'
         ];
     }
+   /**
+ * Quan hệ với Task (Dự án có nhiều công việc)
+ */
+public function tasks()
+{
+    return $this->hasMany(Task::class);
+}
+
+/**
+ * Lấy các task đang thực hiện
+ */
+public function inProgressTasks()
+{
+    return $this->tasks()->where('status', Task::STATUS_IN_PROGRESS);
+}
+
+/**
+ * Lấy các task cần xem xét
+ */
+public function needsReviewTasks()
+{
+    return $this->tasks()->where('status', Task::STATUS_NEEDS_REVIEW);
+}
+
+/**
+ * Lấy các task đã hoàn thành
+ */
+public function completedTasks()
+{
+    return $this->tasks()->where('status', Task::STATUS_COMPLETED);
+}
+
+/**
+ * Tính phần trăm hoàn thành dự án dựa trên tasks
+ */
+public function getCompletionPercentageAttribute()
+{
+    $totalTasks = $this->tasks()->count();
+    if ($totalTasks === 0) {
+        return 0;
+    }
+
+    $completedTasks = $this->completedTasks()->count();
+    return round(($completedTasks / $totalTasks) * 100, 2);
+}
+
+/**
+ * Kiểm tra xem dự án có tasks quá hạn không
+ */
+public function hasOverdueTasks()
+{
+    return $this->tasks()
+        ->where('end_date', '<', now())
+        ->where('status', '!=', Task::STATUS_COMPLETED)
+        ->exists();
+}
+
 }
 

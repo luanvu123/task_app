@@ -46,7 +46,7 @@
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="project-Components">
                             <li><a class="ms-link" href="{{route('projects.index')}}"><span>Projects</span></a></li>
-                            <li><a class="ms-link" href="task.html"><span>Tasks</span></a></li>
+                            <li><a class="ms-link" href="{{route('tasks.index')}}"><span>Tasks</span></a></li>
                             <li><a class="ms-link" href="timesheet.html"><span>Timesheet</span></a></li>
                             <li><a class="ms-link" href="team-leader.html"><span>Leaders</span></a></li>
                         </ul>

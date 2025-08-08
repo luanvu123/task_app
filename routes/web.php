@@ -3,6 +3,7 @@
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
@@ -20,10 +21,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
-     Route::resource('projects', ProjectController::class);
+    Route::resource('projects', ProjectController::class);
+    Route::resource('tasks', TaskController::class);
+    Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.update-status');
+    Route::get('projects/{project}/members', [TaskController::class, 'getProjectMembers'])->name('projects.members');
     Route::get('projects/status/{status?}', [ProjectController::class, 'getProjectsByStatus'])
-         ->name('projects.by-status');
-        Route::resource('departments', DepartmentController::class);
+        ->name('projects.by-status');
+    Route::resource('departments', DepartmentController::class);
     Route::patch('users/{user}/personal-info', [UserController::class, 'updatePersonalInfo'])->name('users.updatePersonalInfo');
     Route::patch('users/{user}/bank-info', [UserController::class, 'updateBankInfo'])->name('users.updateBankInfo');
     Route::prefix('messages')->name('messages.')->group(function () {

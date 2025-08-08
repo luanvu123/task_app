@@ -297,4 +297,87 @@ class User extends Authenticatable
     {
         return $this->hasMany(Project::class, 'manager_id');
     }
+
+
+    /**
+ * Quan hệ với Task (User được giao nhiều công việc)
+ */
+public function tasks()
+{
+    return $this->hasMany(Task::class, 'user_id');
+}
+
+/**
+ * Quan hệ với Task đang thực hiện
+ */
+public function inProgressTasks()
+{
+    return $this->tasks()->where('status', Task::STATUS_IN_PROGRESS);
+}
+
+/**
+ * Quan hệ với Task cần xem xét
+ */
+public function needsReviewTasks()
+{
+    return $this->tasks()->where('status', Task::STATUS_NEEDS_REVIEW);
+}
+
+/**
+ * Quan hệ với Task đã hoàn thành
+ */
+public function completedTasks()
+{
+    return $this->tasks()->where('status', Task::STATUS_COMPLETED);
+}
+
+/**
+ * Lấy tasks quá hạn của user
+ */
+public function overdueTasks()
+{
+    return $this->tasks()
+        ->where('end_date', '<', now())
+        ->where('status', '!=', Task::STATUS_COMPLETED);
+}
+
+/**
+ * Tính tỷ lệ hoàn thành công việc của user
+ */
+public function getTaskCompletionRateAttribute()
+{
+    $totalTasks = $this->tasks()->count();
+    if ($totalTasks === 0) {
+        return 0;
+    }
+
+    $completedTasks = $this->completedTasks()->count();
+    return round(($completedTasks / $totalTasks) * 100, 2);
+}
+
+/**
+ * Lấy số lượng task theo trạng thái
+ */
+public function getTaskCountByStatus($status = null)
+{
+    if ($status) {
+        return $this->tasks()->where('status', $status)->count();
+    }
+
+    return [
+        'total' => $this->tasks()->count(),
+        'in_progress' => $this->inProgressTasks()->count(),
+        'needs_review' => $this->needsReviewTasks()->count(),
+        'completed' => $this->completedTasks()->count(),
+        'overdue' => $this->overdueTasks()->count(),
+    ];
+}
+
+/**
+ * Kiểm tra user có task nào quá hạn không
+ */
+public function hasOverdueTasks()
+{
+    return $this->overdueTasks()->exists();
+}
 }
