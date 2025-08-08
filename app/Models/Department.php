@@ -38,4 +38,21 @@ class Department extends Model
     {
         return $this->employees()->count();
     }
+      /**
+     * Quan hệ với Project (Department có nhiều dự án)
+     */
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'department_id');
+    }
+
+ 
+
+    /**
+     * Đếm số lượng dự án trong phòng ban
+     */
+    public function getProjectCountAttribute()
+    {
+        return $this->projects()->count();
+    }
 }

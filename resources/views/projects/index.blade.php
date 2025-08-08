@@ -1,752 +1,394 @@
 @extends('layouts.app')
 
 @section('content')
-
-    <div class="body d-flex py-lg-3 py-md-2">
-        <div class="container-xxl">
-            <div class="row align-items-center">
-                <div class="border-0 mb-4">
-                    <div
-                        class="card-header p-0 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-                        <h3 class="fw-bold py-3 mb-0">Projects</h3>
-                        <div class="d-flex py-2 project-tab flex-wrap w-sm-100">
-                            <button type="button" class="btn btn-dark w-sm-100" data-bs-toggle="modal"
-                                data-bs-target="#createproject"><i class="icofont-plus-circle me-2 fs-6"></i>Create
-                                Project</button>
-                            <ul class="nav nav-tabs tab-body-header rounded ms-3 prtab-set w-sm-100" role="tablist">
-                                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#All-list"
-                                        role="tab">All</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Started-list"
-                                        role="tab">Started</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Approval-list"
-                                        role="tab">Approval</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Completed-list"
-                                        role="tab">Completed</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- Row end  -->
-            <div class="row align-items-center">
-                <div class="col-lg-12 col-md-12 flex-column">
-                    <div class="tab-content mt-4">
-                        <div class="tab-pane fade show active" id="All-list">
-                            <div class="row g-3 gy-5 py-3 row-deck">
-                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center justify-content-between mt-5">
-                                                <div class="lesson_name">
-                                                    <div class="project-block light-info-bg">
-                                                        <i class="icofont-paint"></i>
-                                                    </div>
-                                                    <span class="small text-muted project_name fw-bold"> Social Geek Made
-                                                    </span>
-                                                    {{-- department --}}
-                                                    <h6 class="mb-0 fw-bold  fs-6  mb-2">UI/UX Design</h6>
-                                                </div>
-                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#editproject"><i
-                                                            class="icofont-edit text-success"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteproject"><i
-                                                            class="icofont-ui-delete text-danger"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-list avatar-list-stacked pt-2">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar2.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar1.jpg"
-                                                        alt=
-                                                    <span class="avatar rounded-circle text-center pointer sm"
-                                                        data-bs-toggle="modal" data-bs-target="#addUser"><i
-                                                            class="icofont-ui-add"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="row g-2 pt-4">
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-paper-clip"></i>
-                                                        <span class="ms-2">5 Attach</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-sand-clock"></i>
-                                                        <span class="ms-2">4 Month</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-group-students "></i>
-                                                        <span class="ms-2">5 Members</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-ui-text-chat"></i>
-                                                        <span class="ms-2">10</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="dividers-block"></div>
-                                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                                <h4 class="small fw-bold mb-0">Progress</h4>
-                                                <span class="small light-danger-bg  p-1 rounded"><i
-                                                        class="icofont-ui-clock"></i> 35 Days Left</span>
-                                            </div>
-                                            <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
-                                                    aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 25%" aria-valuenow="30" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 10%" aria-valuenow="10" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center justify-content-between mt-5">
-                                                <div class="lesson_name">
-                                                    <div class="project-block bg-lightgreen">
-                                                        <i class="icofont-vector-path"></i>
-                                                    </div>
-                                                    <span class="small text-muted project_name fw-bold"> Practice to Perfect
-                                                    </span>
-                                                    <h6 class="mb-0 fw-bold  fs-6  mb-2">Website Design</h6>
-                                                </div>
-                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#editproject"><i
-                                                            class="icofont-edit text-success"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteproject"><i
-                                                            class="icofont-ui-delete text-danger"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-list avatar-list-stacked pt-2">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar2.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar1.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar3.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar4.jpg"
-                                                        alt="">
-                                                    <span class="avatar rounded-circle text-center pointer sm"
-                                                        data-bs-toggle="modal" data-bs-target="#addUser"><i
-                                                            class="icofont-ui-add"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="row g-2 pt-4">
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-paper-clip"></i>
-                                                        <span class="ms-2">4 Attach</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-sand-clock"></i>
-                                                        <span class="ms-2">1 Month</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-group-students "></i>
-                                                        <span class="ms-2">4 Members</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-ui-text-chat"></i>
-                                                        <span class="ms-2">3</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="dividers-block"></div>
-                                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                                <h4 class="small fw-bold mb-0">Progress</h4>
-                                                <span class="small light-danger-bg  p-1 rounded"><i
-                                                        class="icofont-ui-clock"></i> 15 Days Left</span>
-                                            </div>
-                                            <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
-                                                    aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 25%" aria-valuenow="30" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 39%" aria-valuenow="39" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="Started-list">
-                            <div class="row g-3 gy-5 py-3 row-deck">
-                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center justify-content-between mt-5">
-                                                <div class="lesson_name">
-                                                    <div class="project-block light-info-bg">
-                                                        <i class="icofont-paint"></i>
-                                                    </div>
-                                                    <span class="small text-muted project_name fw-bold"> Social Geek Made
-                                                    </span>
-                                                    <h6 class="mb-0 fw-bold  fs-6  mb-2">UI/UX Design</h6>
-                                                </div>
-                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#editproject"><i
-                                                            class="icofont-edit text-success"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteproject"><i
-                                                            class="icofont-ui-delete text-danger"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-list avatar-list-stacked pt-2">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar2.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar1.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar3.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar4.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar8.jpg"
-                                                        alt="">
-                                                    <span class="avatar rounded-circle text-center pointer sm"
-                                                        data-bs-toggle="modal" data-bs-target="#addUser"><i
-                                                            class="icofont-ui-add"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="row g-2 pt-4">
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-paper-clip"></i>
-                                                        <span class="ms-2">5 Attach</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-sand-clock"></i>
-                                                        <span class="ms-2">4 Month</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-group-students "></i>
-                                                        <span class="ms-2">5 Members</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-ui-text-chat"></i>
-                                                        <span class="ms-2">10</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="dividers-block"></div>
-                                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                                <h4 class="small fw-bold mb-0">Progress</h4>
-                                                <span class="small light-danger-bg  p-1 rounded"><i
-                                                        class="icofont-ui-clock"></i> 35 Days Left</span>
-                                            </div>
-                                            <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
-                                                    aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 25%" aria-valuenow="30" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 10%" aria-valuenow="10" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center justify-content-between mt-5">
-                                                <div class="lesson_name">
-                                                    <div class="project-block bg-lightgreen">
-                                                        <i class="icofont-vector-path"></i>
-                                                    </div>
-                                                    <span class="small text-muted project_name fw-bold"> Practice to Perfect
-                                                    </span>
-                                                    <h6 class="mb-0 fw-bold  fs-6  mb-2">Website Design</h6>
-                                                </div>
-                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#editproject"><i
-                                                            class="icofont-edit text-success"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteproject"><i
-                                                            class="icofont-ui-delete text-danger"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-list avatar-list-stacked pt-2">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar2.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar1.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar3.jpg"
-                                                        alt="">
-                                                    <img class="avatar rounded-circle sm" src="assets/images/xs/avatar4.jpg"
-                                                        alt="">
-                                                    <span class="avatar rounded-circle text-center pointer sm"
-                                                        data-bs-toggle="modal" data-bs-target="#addUser"><i
-                                                            class="icofont-ui-add"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="row g-2 pt-4">
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-paper-clip"></i>
-                                                        <span class="ms-2">4 Attach</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-sand-clock"></i>
-                                                        <span class="ms-2">1 Month</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-group-students "></i>
-                                                        <span class="ms-2">4 Members</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="icofont-ui-text-chat"></i>
-                                                        <span class="ms-2">3</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="dividers-block"></div>
-                                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                                <h4 class="small fw-bold mb-0">Progress</h4>
-                                                <span class="small light-danger-bg  p-1 rounded"><i
-                                                        class="icofont-ui-clock"></i> 15 Days Left</span>
-                                            </div>
-                                            <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
-                                                    aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 25%" aria-valuenow="30" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                                <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                    style="width: 39%" aria-valuenow="39" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="Approval-list">
-                            <div class="row g-3 gy-5 py-3 row-deck">
-                                           <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                            ...
-                                           </div>
-                                           ...
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="Completed-list">
-                            <div class="row g-3 gy-5 py-3 row-deck">
-                               
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="body d-flex py-lg-3 py-md-2">
+    <div class="container-xxl">
+        <!-- Success/Error Messages -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        </div>
-    </div>
+        @endif
 
-    <!-- Modal Members-->
-    <div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title  fw-bold" id="addUserLabel">Employee Invitation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="inviteby_email">
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="Email address" id="exampleInputEmail1"
-                                aria-describedby="exampleInputEmail1">
-                            <button class="btn btn-dark" type="button" id="button-addon2">Sent</button>
-                        </div>
-                    </div>
-                    <div class="members_list">
-                        <h6 class="fw-bold ">Employee </h6>
-                        <ul class="list-unstyled list-group list-group-custom list-group-flush mb-0">
-                            <li class="list-group-item py-3 text-center text-md-start">
-                                <div
-                                    class="d-flex align-items-center flex-column flex-sm-column flex-md-column flex-lg-row">
-                                    <div class="no-thumbnail mb-2 mb-md-0">
-                                        <img class="avatar lg rounded-circle" src="assets/images/xs/avatar2.jpg" alt="">
-                                    </div>
-                                    <div class="flex-fill ms-3 text-truncate">
-                                        <h6 class="mb-0  fw-bold">Rachel Carr(you)</h6>
-                                        <span class="text-muted">rachel.carr@gmail.com</span>
-                                    </div>
-                                    <div class="members-action">
-                                        <span class="members-role ">Admin</span>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn bg-transparent dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="icofont-ui-settings  fs-6"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" href="#"><i
-                                                            class="icofont-ui-password fs-6 me-2"></i>ResetPassword</a></li>
-                                                <li><a class="dropdown-item" href="#"><i
-                                                            class="icofont-chart-line fs-6 me-2"></i>ActivityReport</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div class="card-header p-0 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold py-3 mb-0">Dự án</h3>
+                    <div class="d-flex py-2 project-tab flex-wrap w-sm-100">
+                        <button type="button" class="btn btn-dark w-sm-100" data-bs-toggle="modal"
+                            data-bs-target="#createproject">
+                            <i class="icofont-plus-circle me-2 fs-6"></i>Tạo dự án
+                        </button>
+                        <ul class="nav nav-tabs tab-body-header rounded ms-3 prtab-set w-sm-100" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#All-list" role="tab">Tất cả</a>
                             </li>
-                            <li class="list-group-item py-3 text-center text-md-start">
-                                <div
-                                    class="d-flex align-items-center flex-column flex-sm-column flex-md-column flex-lg-row">
-                                    <div class="no-thumbnail mb-2 mb-md-0">
-                                        <img class="avatar lg rounded-circle" src="assets/images/xs/avatar3.jpg" alt="">
-                                    </div>
-                                    <div class="flex-fill ms-3 text-truncate">
-                                        <h6 class="mb-0  fw-bold">Lucas Baker<a href="#" class="link-secondary ms-2">(Resend
-                                                invitation)</a></h6>
-                                        <span class="text-muted">lucas.baker@gmail.com</span>
-                                    </div>
-                                    <div class="members-action">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn bg-transparent dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Members
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="#">
-                                                        <i class="icofont-check-circled"></i>
-
-                                                        <span>All operations permission</span>
-                                                    </a>
-
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">
-                                                        <i class="fs-6 p-2 me-1"></i>
-                                                        <span>Only Invite & manage team</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn bg-transparent dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="icofont-ui-settings  fs-6"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" href="#"><i
-                                                            class="icofont-delete-alt fs-6 me-2"></i>Delete Member</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Planning-list" role="tab">Lên kế hoạch</a>
                             </li>
-                            <li class="list-group-item py-3 text-center text-md-start">
-                                <div
-                                    class="d-flex align-items-center flex-column flex-sm-column flex-md-column flex-lg-row">
-                                    <div class="no-thumbnail mb-2 mb-md-0">
-                                        <img class="avatar lg rounded-circle" src="assets/images/xs/avatar8.jpg" alt="">
-                                    </div>
-                                    <div class="flex-fill ms-3 text-truncate">
-                                        <h6 class="mb-0  fw-bold">Una Coleman</h6>
-                                        <span class="text-muted">una.coleman@gmail.com</span>
-                                    </div>
-                                    <div class="members-action">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn bg-transparent dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Members
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="#">
-                                                        <i class="icofont-check-circled"></i>
-
-                                                        <span>All operations permission</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">
-                                                        <i class="fs-6 p-2 me-1"></i>
-                                                        <span>Only Invite & manage team</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="btn-group">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn bg-transparent dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="icofont-ui-settings  fs-6"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li><a class="dropdown-item" href="#"><i
-                                                                class="icofont-ui-password fs-6 me-2"></i>ResetPassword</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#"><i
-                                                                class="icofont-chart-line fs-6 me-2"></i>ActivityReport</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#"><i
-                                                                class="icofont-delete-alt fs-6 me-2"></i>Suspend member</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#"><i
-                                                                class="icofont-not-allowed fs-6 me-2"></i>Delete Member</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#InProgress-list" role="tab">Đang thực hiện</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Completed-list" role="tab">Hoàn thành</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Create Project-->
-    <div class="modal fade" id="createproject" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title  fw-bold" id="createprojectlLabel"> Create Project</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput77" class="form-label">Project Name</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput77"
-                            placeholder="Explain what the Project Name">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Project Category</label>
-                        <select class="form-select" aria-label="Default select Project Category">
-                            <option selected>UI/UX Design</option>
-                            <option value="1">Website Design</option>
-                            <option value="2">App Development</option>
-                            <option value="3">Quality Assurance</option>
-                            <option value="4">Development</option>
-                            <option value="5">Backend Development</option>
-                            <option value="6">Software Testing</option>
-                            <option value="7">Website Design</option>
-                            <option value="8">Marketing</option>
-                            <option value="9">SEO</option>
-                            <option value="10">Other</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFileMultipleone" class="form-label">Project Images & Document</label>
-                        <input class="form-control" type="file" id="formFileMultipleone" multiple>
-                    </div>
-                    <div class="deadline-form">
-                        <form>
-                            <div class="row g-3 mb-3">
-                                <div class="col">
-                                    <label for="datepickerded" class="form-label">Project Start Date</label>
-                                    <input type="date" class="form-control" id="datepickerded">
-                                </div>
-                                <div class="col">
-                                    <label for="datepickerdedone" class="form-label">Project End Date</label>
-                                    <input type="date" class="form-control" id="datepickerdedone">
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-sm-12">
-                                    <label class="form-label">Notifation Sent</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>All</option>
-                                        <option value="1">Team Leader Only</option>
-                                        <option value="2">Team Member Only</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12">
-                                    <label for="formFileMultipleone" class="form-label">Task Assign Person</label>
-                                    <select class="form-select" multiple aria-label="Default select Priority">
-                                        <option selected>Lucinda Massey</option>
-                                        <option value="1">Ryan Nolan</option>
-                                        <option value="2">Oliver Black</option>
-                                        <option value="3">Adam Walker</option>
-                                        <option value="4">Brian Skinner</option>
-                                        <option value="5">Dan Short</option>
-                                        <option value="5">Jack Glover</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="row g-3 mb-3">
-                        <div class="col-sm">
-                            <label for="formFileMultipleone" class="form-label">Budget</label>
-                            <input type="number" class="form-control">
-                        </div>
-                        <div class="col-sm">
-                            <label for="formFileMultipleone" class="form-label">Priority</label>
-                            <select class="form-select" aria-label="Default select Priority">
-                                <option selected>Highest</option>
-                                <option value="1">Medium</option>
-                                <option value="2">Low</option>
-                                <option value="3">Lowest</option>
-                            </select>
+        <div class="row align-items-center">
+            <div class="col-lg-12 col-md-12 flex-column">
+                <div class="tab-content mt-4">
+                    <!-- All Projects Tab -->
+                    <div class="tab-pane fade show active" id="All-list">
+                        <div class="row g-3 gy-5 py-3 row-deck">
+                            @foreach($projects as $project)
+                                @include('projects.partials.project-card', ['project' => $project])
+                            @endforeach
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlTextarea78" class="form-label">Description (optional)</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea78" rows="3"
-                            placeholder="Add any extra details about the request"></textarea>
+
+                    <!-- Planning Projects Tab -->
+                    <div class="tab-pane fade" id="Planning-list">
+                        <div class="row g-3 gy-5 py-3 row-deck">
+                            @foreach($projects->where('status', 'planning') as $project)
+                                @include('projects.partials.project-card', ['project' => $project])
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
-                    <button type="button" class="btn btn-primary">Create</button>
+
+                    <!-- In Progress Projects Tab -->
+                    <div class="tab-pane fade" id="InProgress-list">
+                        <div class="row g-3 gy-5 py-3 row-deck">
+                            @foreach($projects->where('status', 'in_progress') as $project)
+                                @include('projects.partials.project-card', ['project' => $project])
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Completed Projects Tab -->
+                    <div class="tab-pane fade" id="Completed-list">
+                        <div class="row g-3 gy-5 py-3 row-deck">
+                            @foreach($projects->where('status', 'completed') as $project)
+                                @include('projects.partials.project-card', ['project' => $project])
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Edit Project-->
-    <div class="modal fade" id="editproject" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
-            <div class="modal-content">
+<!-- Create Project Modal -->
+<div class="modal fade" id="createproject" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title  fw-bold" id="editprojectLabel"> Edit Project</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold">Tạo dự án mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <div class="mb-3">
-                        <label for="exampleFormControlInput78" class="form-label">Project Name</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput78" value="Social Geek Made">
+                        <label for="project_name" class="form-label">Tên dự án</label>
+                        <input type="text" class="form-control" id="project_name" name="name"
+                               placeholder="Nhập tên dự án" required>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">Project Category</label>
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected>UI/UX Design</option>
-                            <option value="1">Website Design</option>
-                            <option value="2">App Development</option>
-                            <option value="3">Quality Assurance</option>
-                            <option value="4">Development</option>
-                            <option value="5">Backend Development</option>
-                            <option value="6">Software Testing</option>
-                            <option value="7">Website Design</option>
-                            <option value="8">Marketing</option>
-                            <option value="9">SEO</option>
-                            <option value="10">Other</option>
+                        <label class="form-label">Phòng ban</label>
+                        <select class="form-select" name="department_id" required>
+                            <option value="">Chọn phòng ban</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                            @endforeach
                         </select>
                     </div>
+
                     <div class="mb-3">
-                        <label for="formFileMultiple456" class="form-label">Project Images & Document</label>
-                        <input class="form-control" type="file" id="formFileMultiple456">
+                        <label class="form-label">Quản lý dự án</label>
+                        <select class="form-select" name="manager_id" required>
+                            <option value="">Chọn quản lý</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="deadline-form">
-                        <form>
-                            <div class="row g-3 mb-3">
-                                <div class="col">
-                                    <label for="datepickerded123" class="form-label">Project Start Date</label>
-                                    <input type="date" class="form-control" id="datepickerded123" value="2021-01-10">
-                                </div>
-                                <div class="col">
-                                    <label for="datepickerded456" class="form-label">Project End Date</label>
-                                    <input type="date" class="form-control" id="datepickerded456" value="2021-04-10">
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-sm-12">
-                                    <label class="form-label">Notifation Sent</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>All</option>
-                                        <option value="1">Team Leader Only</option>
-                                        <option value="2">Team Member Only</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12">
-                                    <label for="formFileMultipleone" class="form-label">Task Assign Person</label>
-                                    <select class="form-select" multiple aria-label="Default select Priority">
-                                        <option selected>Lucinda Massey</option>
-                                        <option selected value="1">Ryan Nolan</option>
-                                        <option selected value="2">Oliver Black</option>
-                                        <option selected value="3">Adam Walker</option>
-                                        <option selected value="4">Brian Skinner</option>
-                                        <option value="5">Dan Short</option>
-                                        <option value="5">Jack Glover</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </form>
+
+                    <div class="mb-3">
+                        <label for="project_images" class="form-label">Hình ảnh & Tài liệu</label>
+                        <input class="form-control" type="file" name="images[]" multiple
+                               accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx">
                     </div>
+
                     <div class="row g-3 mb-3">
-                        <div class="col-sm">
-                            <label for="formFileMultipleone" class="form-label">Priority</label>
-                            <select class="form-select" aria-label="Default select Priority">
-                                <option selected>Medium</option>
-                                <option value="1">Highest</option>
-                                <option value="2">Low</option>
-                                <option value="3">Lowest</option>
+                        <div class="col">
+                            <label class="form-label">Ngày bắt đầu</label>
+                            <input type="date" class="form-control" name="start_date" required>
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Ngày kết thúc</label>
+                            <input type="date" class="form-control" name="end_date" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-12">
+                            <label class="form-label">Thông báo gửi đến</label>
+                            <select class="form-select" name="notification_sent" required>
+                                @foreach(App\Models\Project::getNotificationTypes() as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label">Thành viên tham gia</label>
+                            <select class="form-select" multiple name="member_ids[]">
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm">
+                            <label class="form-label">Ngân sách (VNĐ)</label>
+                            <input type="number" class="form-control" name="budget" min="0" step="1000">
+                        </div>
+                        <div class="col-sm">
+                            <label class="form-label">Độ ưu tiên</label>
+                            <select class="form-select" name="priority" required>
+                                @foreach(App\Models\Project::getPriorities() as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea786" class="form-label">Description (optional)</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea786" rows="3">Social Geek Made,lorem urna commodo sem. Pellentesque venenatis leo quam, sed mattis sapien lobortis ut. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                                </textarea>
+                        <label class="form-label">Mô tả (tùy chọn)</label>
+                        <textarea class="form-control" name="description" rows="3"
+                                  placeholder="Thêm mô tả chi tiết về dự án"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
-                    <button type="button" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Tạo dự án</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <!-- Modal  Delete Folder/ File-->
-    <div class="modal fade" id="deleteproject" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
-            <div class="modal-content">
+<!-- Edit Project Modal -->
+<div class="modal fade" id="editproject" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="edit-project-form" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title  fw-bold" id="deleteprojectLabel"> Delete item Permanently?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold">Chỉnh sửa dự án</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <input type="hidden" id="edit_project_id" name="project_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Tên dự án</label>
+                        <input type="text" class="form-control" id="edit_project_name" name="name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phòng ban</label>
+                        <select class="form-select" id="edit_department_id" name="department_id" required>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Quản lý dự án</label>
+                        <select class="form-select" id="edit_manager_id" name="manager_id" required>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Hình ảnh & Tài liệu mới</label>
+                        <input class="form-control" type="file" name="images[]" multiple
+                               accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx">
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col">
+                            <label class="form-label">Ngày bắt đầu</label>
+                            <input type="date" class="form-control" id="edit_start_date" name="start_date" required>
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Ngày kết thúc</label>
+                            <input type="date" class="form-control" id="edit_end_date" name="end_date" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-12">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select" id="edit_status" name="status" required>
+                                @foreach(App\Models\Project::getStatuses() as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label">Thông báo gửi đến</label>
+                            <select class="form-select" id="edit_notification_sent" name="notification_sent" required>
+                                @foreach(App\Models\Project::getNotificationTypes() as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label">Thành viên tham gia</label>
+                            <select class="form-select" id="edit_member_ids" multiple name="member_ids[]">
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm">
+                            <label class="form-label">Ngân sách (VNĐ)</label>
+                            <input type="number" class="form-control" id="edit_budget" name="budget" min="0" step="1000">
+                        </div>
+                        <div class="col-sm">
+                            <label class="form-label">Độ ưu tiên</label>
+                            <select class="form-select" id="edit_priority" name="priority" required>
+                                @foreach(App\Models\Project::getPriorities() as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Project Modal -->
+<div class="modal fade" id="deleteproject" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="delete-project-form" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Xóa dự án vĩnh viễn?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body justify-content-center flex-column d-flex">
                     <i class="icofont-ui-delete text-danger display-2 text-center mt-2"></i>
-                    <p class="mt-4 fs-5 text-center">You can only delete this item Permanently</p>
+                    <p class="mt-4 fs-5 text-center">Bạn chỉ có thể xóa dự án này vĩnh viễn</p>
+                    <p class="text-center">Tên dự án: <strong id="delete_project_name"></strong></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger color-fff">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Edit Project Modal
+    document.querySelectorAll('[data-bs-target="#editproject"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const projectId = this.getAttribute('data-project-id');
+            const projectName = this.getAttribute('data-project-name');
+            const departmentId = this.getAttribute('data-department-id');
+            const managerId = this.getAttribute('data-manager-id');
+            const startDate = this.getAttribute('data-start-date');
+            const endDate = this.getAttribute('data-end-date');
+            const budget = this.getAttribute('data-budget');
+            const priority = this.getAttribute('data-priority');
+            const status = this.getAttribute('data-status');
+            const notificationSent = this.getAttribute('data-notification-sent');
+            const description = this.getAttribute('data-description');
+            const memberIds = JSON.parse(this.getAttribute('data-member-ids') || '[]');
+
+            // Set form action
+            document.getElementById('edit-project-form').action = `/projects/${projectId}`;
+
+            // Fill form fields
+            document.getElementById('edit_project_id').value = projectId;
+            document.getElementById('edit_project_name').value = projectName;
+            document.getElementById('edit_department_id').value = departmentId;
+            document.getElementById('edit_manager_id').value = managerId;
+            document.getElementById('edit_start_date').value = startDate;
+            document.getElementById('edit_end_date').value = endDate;
+            document.getElementById('edit_budget').value = budget;
+            document.getElementById('edit_priority').value = priority;
+            document.getElementById('edit_status').value = status;
+            document.getElementById('edit_notification_sent').value = notificationSent;
+            document.getElementById('edit_description').value = description;
+
+            // Set selected members
+            const memberSelect = document.getElementById('edit_member_ids');
+            Array.from(memberSelect.options).forEach(option => {
+                option.selected = memberIds.includes(parseInt(option.value));
+            });
+        });
+    });
+
+    // Delete Project Modal
+    document.querySelectorAll('[data-bs-target="#deleteproject"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const projectId = this.getAttribute('data-project-id');
+            const projectName = this.getAttribute('data-project-name');
+
+            // Set form action
+            document.getElementById('delete-project-form').action = `/projects/${projectId}`;
+
+            // Set project name in modal
+            document.getElementById('delete_project_name').textContent = projectName;
+        });
+    });
+});
+</script>
 @endsection
+
+
+

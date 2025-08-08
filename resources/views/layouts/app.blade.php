@@ -45,7 +45,7 @@
                                 class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="project-Components">
-                            <li><a class="ms-link" href="projects.html"><span>Projects</span></a></li>
+                            <li><a class="ms-link" href="{{route('projects.index')}}"><span>Projects</span></a></li>
                             <li><a class="ms-link" href="task.html"><span>Tasks</span></a></li>
                             <li><a class="ms-link" href="timesheet.html"><span>Timesheet</span></a></li>
                             <li><a class="ms-link" href="team-leader.html"><span>Leaders</span></a></li>
