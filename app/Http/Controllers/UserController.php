@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
@@ -25,7 +26,7 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $query = User::query();
-
+ $departments = Department::where('status', 'active')->get();
         // Lọc theo trạng thái nếu có
         if ($request->has('status') && in_array($request->status, ['active', 'inactive', 'suspended'])) {
             $query->where('status', $request->status);
@@ -53,7 +54,7 @@ class UserController extends Controller
         // Phân trang
         $users = $query->paginate(12)->appends($request->query());
 
-        return view('users.index', compact('users'));
+        return view('users.index', compact('users', 'departments'));
     }
 
     /**
@@ -74,96 +75,103 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request): RedirectResponse
-    {
-        // Validation rules
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255|min:2',
-            'email' => 'required|email|unique:users,email|max:255',
-            'password' => 'required|string|min:8|max:255',
-            'phone' => 'nullable|string|max:20|regex:/^[\d\s\+\-\(\)]+$/',
-            'dob' => 'nullable|date|before:today|after:1900-01-01',
-            'address' => 'nullable|string|max:1000',
-            'description' => 'nullable|string|max:2000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
-            'position' => 'nullable|string|max:100',
-            'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
-            'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
-        ], [
-            // Custom error messages in Vietnamese
-            'name.required' => 'Họ và tên là bắt buộc.',
-            'name.min' => 'Họ và tên phải có ít nhất 2 ký tự.',
-            'name.max' => 'Họ và tên không được vượt quá 255 ký tự.',
-            'email.required' => 'Email là bắt buộc.',
-            'email.email' => 'Email không đúng định dạng.',
-            'email.unique' => 'Email này đã được sử dụng.',
-            'email.max' => 'Email không được vượt quá 255 ký tự.',
-            'password.required' => 'Mật khẩu là bắt buộc.',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
-            'password.max' => 'Mật khẩu không được vượt quá 255 ký tự.',
-            'phone.regex' => 'Số điện thoại không đúng định dạng.',
-            'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
-            'dob.date' => 'Ngày sinh không đúng định dạng.',
-            'dob.before' => 'Ngày sinh phải trước ngày hôm nay.',
-            'dob.after' => 'Ngày sinh không hợp lệ.',
-            'address.max' => 'Địa chỉ không được vượt quá 1000 ký tự.',
-            'description.max' => 'Mô tả không được vượt quá 2000 ký tự.',
-            'image.image' => 'File phải là hình ảnh.',
-            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif.',
-            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
-            'position.max' => 'Chức vụ không được vượt quá 100 ký tự.',
-            'gender.in' => 'Giới tính không hợp lệ.',
-            'status.required' => 'Trạng thái là bắt buộc.',
-            'status.in' => 'Trạng thái không hợp lệ.',
+   public function store(Request $request): RedirectResponse
+{
+    // Validation rules
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255|min:2',
+        'email' => 'required|email|unique:users,email|max:255',
+        'password' => 'required|string|min:8|max:255',
+        'department_id' => 'required|exists:departments,id',
+        'phone' => 'nullable|string|max:20|regex:/^[\d\s\+\-\(\)]+$/',
+        'dob' => 'nullable|date|before:today|after:1900-01-01',
+        'address' => 'nullable|string|max:1000',
+        'description' => 'nullable|string|max:2000',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
+        'position' => 'nullable|string|max:100',
+        'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
+        'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
+    ], [
+        // Custom error messages in Vietnamese
+        'name.required' => 'Họ và tên là bắt buộc.',
+        'name.min' => 'Họ và tên phải có ít nhất 2 ký tự.',
+        'name.max' => 'Họ và tên không được vượt quá 255 ký tự.',
+        'email.required' => 'Email là bắt buộc.',
+        'email.email' => 'Email không đúng định dạng.',
+        'email.unique' => 'Email này đã được sử dụng.',
+        'email.max' => 'Email không được vượt quá 255 ký tự.',
+        'password.required' => 'Mật khẩu là bắt buộc.',
+        'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+        'password.max' => 'Mật khẩu không được vượt quá 255 ký tự.',
+        'department_id.required' => 'Phòng ban là bắt buộc.',
+        'department_id.exists' => 'Phòng ban được chọn không tồn tại.',
+        'phone.regex' => 'Số điện thoại không đúng định dạng.',
+        'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
+        'dob.date' => 'Ngày sinh không đúng định dạng.',
+        'dob.before' => 'Ngày sinh phải trước ngày hôm nay.',
+        'dob.after' => 'Ngày sinh không hợp lệ.',
+        'address.max' => 'Địa chỉ không được vượt quá 1000 ký tự.',
+        'description.max' => 'Mô tả không được vượt quá 2000 ký tự.',
+        'image.image' => 'File phải là hình ảnh.',
+        'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif.',
+        'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
+        'position.max' => 'Chức vụ không được vượt quá 100 ký tự.',
+        'gender.in' => 'Giới tính không hợp lệ.',
+        'status.required' => 'Trạng thái là bắt buộc.',
+        'status.in' => 'Trạng thái không hợp lệ.',
+    ]);
+
+    try {
+        // Xử lý upload ảnh
+        $imagePath = null;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('users/avatars', $imageName, 'public');
+        }
+
+        // Lấy thông tin department để hiển thị trong thông báo
+        $department = Department::find($validatedData['department_id']);
+
+        // Tạo user mới
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'department_id' => $validatedData['department_id'],
+            'phone' => $validatedData['phone'] ?? null,
+            'dob' => $validatedData['dob'] ?? null,
+            'address' => $validatedData['address'] ?? null,
+            'description' => $validatedData['description'] ?? null,
+            'image' => $imagePath,
+            'position' => $validatedData['position'] ?? null,
+            'gender' => $validatedData['gender'] ?? null,
+            'status' => $validatedData['status'],
         ]);
 
-        try {
-            // Xử lý upload ảnh
-            $imagePath = null;
-            if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('users/avatars', $imageName, 'public');
-            }
+        // Thông báo thành công
+        return redirect()->route('users.index')
+            ->with('success', 'Tạo nhân viên mới thành công! Nhân viên ' . $user->name . ' đã được thêm vào phòng ban ' . $department->name . '.');
 
-            // Tạo user mới
-            $user = User::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),
-                'phone' => $validatedData['phone'] ?? null,
-                'dob' => $validatedData['dob'] ?? null,
-                'address' => $validatedData['address'] ?? null,
-                'description' => $validatedData['description'] ?? null,
-                'image' => $imagePath,
-                'position' => $validatedData['position'] ?? null,
-                'gender' => $validatedData['gender'] ?? null,
-                'status' => $validatedData['status'],
-            ]);
-
-            // Thông báo thành công
-            return redirect()->route('users.index')
-                ->with('success', 'Tạo nhân viên mới thành công! Nhân viên ' . $user->name . ' đã được thêm vào hệ thống.');
-
-        } catch (\Exception $e) {
-            // Xóa file ảnh nếu có lỗi xảy ra sau khi upload
-            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
-            }
-
-            // Log lỗi
-            \Log::error('Error creating user: ' . $e->getMessage(), [
-                'request_data' => $request->except('password'),
-                'user_ip' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-            ]);
-
-            // Thông báo lỗi
-            return redirect()->back()
-                ->withInput($request->except('password'))
-                ->with('error', 'Có lỗi xảy ra khi tạo nhân viên. Vui lòng thử lại.');
+    } catch (\Exception $e) {
+        // Xóa file ảnh nếu có lỗi xảy ra sau khi upload
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
         }
+
+        // Log lỗi
+        \Log::error('Error creating user: ' . $e->getMessage(), [
+            'request_data' => $request->except('password'),
+            'user_ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
+
+        // Thông báo lỗi
+        return redirect()->back()
+            ->withInput($request->except('password'))
+            ->with('error', 'Có lỗi xảy ra khi tạo nhân viên. Vui lòng thử lại.');
     }
+}
 
     /**
      * Display the specified resource.
@@ -242,13 +250,15 @@ class UserController extends Controller
             // Lấy danh sách roles nếu sử dụng Spatie Permission
             $roles = [];
             $userRoles = [];
-
+        $departments = Department::where('status', 'active')
+            ->orderBy('name')
+            ->get();
             if (class_exists('Spatie\Permission\Models\Role')) {
                 $roles = \Spatie\Permission\Models\Role::pluck('name', 'name')->all();
                 $userRoles = $user->roles->pluck('name', 'name')->all();
             }
 
-            return view('users.edit', compact('user', 'roles', 'userRoles'));
+            return view('users.edit', compact('user', 'roles', 'userRoles', 'departments'));
 
         } catch (\Exception $e) {
             \Log::error('Error loading user for edit: ' . $e->getMessage(), [
@@ -286,6 +296,7 @@ class UserController extends Controller
                 'position' => 'nullable|string|max:100',
                 'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
                 'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
+                'department_id' => 'nullable|exists:departments,id',
                 'roles' => 'nullable|array',
                 'roles.*' => 'string|exists:roles,name',
             ], [
@@ -305,6 +316,7 @@ class UserController extends Controller
                 'dob.date' => 'Ngày sinh không đúng định dạng.',
                 'dob.before' => 'Ngày sinh phải trước ngày hôm nay.',
                 'dob.after' => 'Ngày sinh không hợp lệ.',
+                'department_id.exists' => 'Phòng ban được chọn không tồn tại.',
                 'address.max' => 'Địa chỉ không được vượt quá 1000 ký tự.',
                 'description.max' => 'Mô tả không được vượt quá 2000 ký tự.',
                 'image.image' => 'File phải là hình ảnh.',
@@ -344,6 +356,7 @@ class UserController extends Controller
                 'position' => $validatedData['position'] ?? null,
                 'gender' => $validatedData['gender'] ?? null,
                 'status' => $validatedData['status'],
+                 'department_id' => $validatedData['department_id'] ?? null,
             ];
 
             // Cập nhật mật khẩu nếu có

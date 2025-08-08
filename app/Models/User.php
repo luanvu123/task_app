@@ -44,6 +44,7 @@ class User extends Authenticatable
         'ifsc_code',
         'pan_no',
         'upi_id',
+        'department_id',
     ];
 
     /**
@@ -89,7 +90,7 @@ class User extends Authenticatable
      */
     public function getStatusTextAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => 'Hoạt động',
             'inactive' => 'Không hoạt động',
             'suspended' => 'Tạm ngưng',
@@ -102,7 +103,7 @@ class User extends Authenticatable
      */
     public function getGenderTextAttribute()
     {
-        return match($this->gender) {
+        return match ($this->gender) {
             'male' => 'Nam',
             'female' => 'Nữ',
             'other' => 'Khác',
@@ -115,7 +116,7 @@ class User extends Authenticatable
      */
     public function getMaritalStatusTextAttribute()
     {
-        return match($this->marital_status) {
+        return match ($this->marital_status) {
             'single' => 'Độc thân',
             'married' => 'Đã kết hôn',
             'divorced' => 'Đã ly hôn',
@@ -233,33 +234,49 @@ class User extends Authenticatable
     public function scopeWithBankingInfo($query)
     {
         return $query->whereNotNull('bank_name')
-                    ->whereNotNull('account_no')
-                    ->whereNotNull('ifsc_code');
+            ->whereNotNull('account_no')
+            ->whereNotNull('ifsc_code');
     }
 
     /**
- * Conversations user tham gia
- */
-public function conversations(): BelongsToMany
-{
-    return $this->belongsToMany(Conversation::class, 'conversation_participants')
-                ->withPivot('joined_at', 'last_read_at')
-                ->orderByDesc('last_message_at');
-}
+     * Conversations user tham gia
+     */
+    public function conversations(): BelongsToMany
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_participants')
+            ->withPivot('joined_at', 'last_read_at')
+            ->orderByDesc('last_message_at');
+    }
 
-/**
- * Messages của user
- */
-public function messages(): HasMany
-{
-    return $this->hasMany(Message::class);
-}
+    /**
+     * Messages của user
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
 
-/**
- * Conversations user đã tạo
- */
-public function createdConversations(): HasMany
-{
-    return $this->hasMany(Conversation::class, 'created_by');
-}
+    /**
+     * Conversations user đã tạo
+     */
+    public function createdConversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'created_by');
+    }
+
+    /**
+     * Quan hệ với Department
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Quan hệ Department mà user là department head
+     */
+    public function managedDepartments()
+    {
+        return $this->hasMany(Department::class, 'department_head_id');
+    }
 }

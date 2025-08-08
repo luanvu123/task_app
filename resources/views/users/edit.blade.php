@@ -219,6 +219,29 @@
                                             @enderror
                                         </div>
                                     </div>
+                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="department_id" class="form-label">Phòng ban</label>
+                                            <select class="form-select @error('department_id') is-invalid @enderror"
+                                                    id="department_id"
+                                                    name="department_id">
+                                                <option value="">-- Chọn phòng ban --</option>
+                                                @foreach($departments as $department)
+                                                    <option value="{{ $department->id }}"
+                                                            {{ old('department_id', $user->department_id) == $department->id ? 'selected' : '' }}>
+                                                        {{ $department->name }}
+                                                        @if($department->departmentHead)
+                                                            (Trưởng phòng: {{ $department->departmentHead->name }})
+                                                        @endif
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('department_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            <div class="form-text">Chọn phòng ban mà nhân viên thuộc về</div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Địa chỉ -->

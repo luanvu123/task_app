@@ -85,7 +85,7 @@
                                         Employees</span></a></li>
                             <li><a class="ms-link" href="attendance.html"> <span>Attendance</span></a></li>
                             <li><a class="ms-link" href="leave-request.html"> <span>Leave Request</span></a></li>
-                            <li><a class="ms-link" href="department.html"> <span>Department</span></a></li>
+                            <li><a class="ms-link" href="{{route('departments.index')}}"> <span>Department</span></a></li>
                             <li><a class="ms-link" href="loan.html"> <span>Loan</span></a></li>
                         </ul>
                     </li>
