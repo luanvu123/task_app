@@ -114,17 +114,17 @@
                     </li>
                     <li class="collapsed">
                         <a class="m-link" data-bs-toggle="collapse" data-bs-target="#app-Components" href="#">
-                            <i class="icofont-contrast"></i> <span>App</span> <span
+                            <i class="icofont-contrast"></i> <span>Ứng dụng</span> <span
                                 class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="app-Components">
-                            <li><a class="ms-link" href="calendar.html"> <span>Calander</span></a></li>
-                            <li><a class="ms-link" href="chat.html"><span>Chat App</span></a></li>
+                            <li><a class="ms-link" href="calendar.html"> <span>Lịch</span></a></li>
+                            <li><a class="ms-link" href="chat.html"><span>Ứng dụng Chat</span></a></li>
                         </ul>
                     </li>
                     <li class="collapsed">
                         <a class="m-link" data-bs-toggle="collapse" data-bs-target="#extra-Components" href="#">
-                            <i class="icofont-code-alt"></i> <span>Other Pages</span> <span
+                            <i class="icofont-code-alt"></i> <span>Các trang khác</span> <span
                                 class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="extra-Components">

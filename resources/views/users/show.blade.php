@@ -365,7 +365,82 @@
 
                 <!-- Right Sidebar -->
                 <div class="col-xl-4 col-lg-12 col-md-12">
+                    <div class="card mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="mb-0 fw-bold ">Current Task</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="planned_task client_task">
+                                <div class="dd" data-plugin="nestable">
+                                    <ol class="dd-list" style="padding-left: 0rem;">
+                                        <li class="dd-item mb-3">
+                                            <div class="dd-handle">
+                                                <div class="task-info d-flex align-items-center justify-content-between">
+                                                    <h6
+                                                        class="light-info-bg py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">
+                                                        UI/UX Design</h6>
+                                                    <div
+                                                        class="task-priority d-flex flex-column align-items-center justify-content-center">
+                                                        <div class="avatar-list avatar-list-stacked m-0">
+                                                            <img class="avatar rounded-circle small-avt sm"
+                                                                src="assets/images/xs/avatar2.jpg" alt="">
+                                                            <img class="avatar rounded-circle small-avt sm"
+                                                                src="assets/images/xs/avatar1.jpg" alt="">
+                                                        </div>
+                                                        <span class="badge bg-warning text-end mt-1">Inprogress</span>
+                                                    </div>
+                                                </div>
+                                                <p class="py-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                                                    elit. In id
+                                                    nec scelerisque massa.</p>
+                                                <div class="tikit-info row g-3 align-items-center">
+                                                    <div class="col-sm">
+                                                    </div>
+                                                    <div class="col-sm text-end">
+                                                        <div
+                                                            class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
+                                                            Social Geek Made </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
+                                        </li>
+                                        <li class="dd-item">
+                                            <div class="dd-handle">
+                                                <div class="task-info d-flex align-items-center justify-content-between">
+                                                    <h6
+                                                        class="bg-lightgreen py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">
+                                                        Website Design
+                                                    </h6>
+                                                    <div
+                                                        class="task-priority d-flex flex-column align-items-center justify-content-center">
+                                                        <div class="avatar-list avatar-list-stacked m-0">
+                                                            <img class="avatar rounded-circle small-avt sm"
+                                                                src="assets/images/xs/avatar7.jpg" alt="">
+                                                        </div>
+                                                        <span class="badge bg-danger text-end mt-1">Review</span>
+                                                    </div>
+                                                </div>
+                                                <p class="py-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                                                    elit. In id
+                                                    nec scelerisque massa.</p>
+                                                <div class="tikit-info row g-3 align-items-center">
+                                                    <div class="col-sm">
+                                                    </div>
+                                                    <div class="col-sm text-end">
+                                                        <div
+                                                            class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
+                                                            Practice to Perfect </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Profile Status Card -->
                     <div class="card mb-3">
                         <div class="card-header py-3">
@@ -424,7 +499,7 @@
                         </div>
 
                     </div>
-                    
+
                 </div>
             </div>
         </div>
