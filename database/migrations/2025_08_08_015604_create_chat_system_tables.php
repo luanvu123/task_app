@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->id();
             $table->string('title')->nullable(); // Tiêu đề cuộc trò chuyện (cho nhóm)
             $table->enum('type', ['private', 'group'])->default('private');
-            $table->json('participants')->nullable(); // Lưu array user IDs tham gia
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('last_message_at')->nullable();
             $table->timestamps();

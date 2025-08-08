@@ -374,10 +374,6 @@
         </div>
     </div>
     @endif
-
-@endsection
-
-@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-resize textarea
@@ -496,9 +492,7 @@ function leaveGroup(conversationId) {
     }
 }
 </script>
-@endpush
 
-@push('styles')
 <style>
 .w380 {
     width: 380px !important;
@@ -557,4 +551,7 @@ function leaveGroup(conversationId) {
     }
 }
 </style>
-@endpush
+@endsection
+
+
+
