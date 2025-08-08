@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class User extends Authenticatable
@@ -233,4 +236,30 @@ class User extends Authenticatable
                     ->whereNotNull('account_no')
                     ->whereNotNull('ifsc_code');
     }
+
+    /**
+ * Conversations user tham gia
+ */
+public function conversations(): BelongsToMany
+{
+    return $this->belongsToMany(Conversation::class, 'conversation_participants')
+                ->withPivot('joined_at', 'last_read_at')
+                ->orderByDesc('last_message_at');
+}
+
+/**
+ * Messages của user
+ */
+public function messages(): HasMany
+{
+    return $this->hasMany(Message::class);
+}
+
+/**
+ * Conversations user đã tạo
+ */
+public function createdConversations(): HasMany
+{
+    return $this->hasMany(Conversation::class, 'created_by');
+}
 }

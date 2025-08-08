@@ -119,7 +119,7 @@
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="app-Components">
                             <li><a class="ms-link" href="calendar.html"> <span>Lịch</span></a></li>
-                            <li><a class="ms-link" href="chat.html"><span>Ứng dụng Chat</span></a></li>
+                            <li><a class="ms-link" href="{{route('messages.index')}}"><span>Ứng dụng Chat</span></a></li>
                         </ul>
                     </li>
                     <li class="collapsed">
