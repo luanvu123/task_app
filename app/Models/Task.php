@@ -152,4 +152,37 @@ class Task extends Model
             default => 'light-secondary-bg'
         };
     }
+
+    public function scopeByDepartment($query, $departmentId)
+{
+    return $query->whereHas('project', function ($q) use ($departmentId) {
+        $q->where('department_id', $departmentId);
+    });
+}
+
+/**
+ * Scope để lọc tasks của user hiện tại theo department
+ */
+public function scopeForCurrentUserDepartment($query)
+{
+    $user = auth()->user();
+    if (!$user) {
+        return $query->whereNull('id'); // Trả về empty query
+    }
+
+    return $query->byDepartment($user->department_id);
+}
+
+/**
+ * Scope để lọc tasks mà user có thể xem (cùng department)
+ */
+public function scopeViewableByUser($query, $user = null)
+{
+    $user = $user ?? auth()->user();
+    if (!$user) {
+        return $query->whereNull('id'); // Trả về empty query
+    }
+
+    return $query->byDepartment($user->department_id);
+}
 }

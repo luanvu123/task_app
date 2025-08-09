@@ -370,22 +370,67 @@
                             <input type="text" class="form-control" name="name" required>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Chọn Dự Án <span class="text-danger">*</span></label>
-                            <select class="form-select" name="project_id" id="projectSelect" required>
-                                <option value="">-- Chọn dự án --</option>
-                                @foreach($projects as $project)
-                                    <option value="{{ $project->id }}">{{ $project->name }} ({{ $project->department->name ?? '' }})</option>
-                                @endforeach
-                            </select>
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Giao Cho <span class="text-danger">*</span></label>
-                            <select class="form-select" name="user_id" id="userSelect" required>
-                                <option value="">-- Chọn người thực hiện --</option>
-                            </select>
-                        </div>
+<div class="mb-3">
+    <label class="form-label">Chọn Dự Án <span class="text-danger">*</span></label>
+    <select class="form-select" id="editProjectSelect" name="project_id" required>
+        <option value="">-- Chọn dự án --</option>
+        @foreach($projects as $project)
+            <option value="{{ $project->id }}"
+                    data-department="{{ $project->department->name ?? '' }}"
+                    data-members="{{ $project->members->count() ?? 0 }}">
+                {{ $project->name }} ({{ $project->department->name ?? '' }})
+                @if($project->members->count() > 0)
+                    - {{ $project->members->count() }} thành viên
+                @endif
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Giao Cho <span class="text-danger">*</span></label>
+    <select class="form-select" id="editUserSelect" name="user_id" required>
+        <option value="">-- Chọn dự án trước --</option>
+    </select>
+    <div class="form-text">
+        <i class="fas fa-info-circle"></i>
+        Danh sách sẽ hiển thị sau khi chọn dự án
+    </div>
+</div>
+
+<!-- Thêm loading indicator -->
+<div id="userLoadingIndicator" class="d-none">
+    <div class="text-center">
+        <div class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="ms-2">Đang tải danh sách người dùng...</span>
+    </div>
+</div>
+
+<!-- Script để include -->
+
+
+<!-- CSS bổ sung -->
+<style>
+.form-select:disabled {
+    background-color: #f8f9fa;
+    opacity: 0.65;
+}
+
+.form-text {
+    font-size: 0.875em;
+    color: #6c757d;
+}
+
+#userLoadingIndicator {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    margin-top: 5px;
+}
+</style>
 
                         <div class="mb-3">
                             <label for="taskFiles" class="form-label">Tài Liệu & Hình Ảnh</label>
@@ -720,5 +765,114 @@
             });
         });
     </script>
+<script>
+// Thêm vào cuối trang hoặc trong file JS riêng
+document.addEventListener('DOMContentLoaded', function() {
+    // JavaScript cho việc lọc users theo project đã chọn
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý cho form tạo mới task
+    const createProjectSelect = document.getElementById('projectSelect');
+    const createUserSelect = document.getElementById('userSelect');
+
+    // Xử lý cho form edit task
+    const editProjectSelect = document.getElementById('editProjectSelect');
+    const editUserSelect = document.getElementById('editUserSelect');
+
+    // Hàm để lọc users theo project
+    function filterUsersByProject(projectSelect, userSelect) {
+        if (!projectSelect || !userSelect) return;
+
+        projectSelect.addEventListener('change', function() {
+            const projectId = this.value;
+
+            // Xóa tất cả options hiện tại
+            userSelect.innerHTML = '<option value="">-- Chọn người thực hiện --</option>';
+
+            if (!projectId) {
+                return;
+            }
+
+            // Gọi API để lấy users theo project
+            fetch(`/tasks/users-by-project?project_id=${projectId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(users => {
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = `${user.name} - ${user.position || 'N/A'}`;
+                    userSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+                alert('Có lỗi xảy ra khi tải danh sách người dùng');
+            });
+        });
+    }
+
+    // Áp dụng cho form tạo mới
+    filterUsersByProject(createProjectSelect, createUserSelect);
+
+    // Áp dụng cho form edit
+    filterUsersByProject(editProjectSelect, editUserSelect);
+
+    // Xử lý khi edit task - load users của project hiện tại
+    window.loadTaskForEdit = function(taskId) {
+        // ... code khác của bạn ...
+
+        // Sau khi load task data, trigger change event để load users
+        if (editProjectSelect && editProjectSelect.value) {
+            editProjectSelect.dispatchEvent(new Event('change'));
+        }
+    }
+});
+
+// Alternative: Sử dụng jQuery nếu có
+$(document).ready(function() {
+    function setupProjectUserFilter(projectSelectId, userSelectId) {
+        $(projectSelectId).on('change', function() {
+            const projectId = $(this).val();
+            const userSelect = $(userSelectId);
+
+            // Clear existing options
+            userSelect.html('<option value="">-- Chọn người thực hiện --</option>');
+
+            if (!projectId) return;
+
+            // AJAX call to get users
+            $.ajax({
+                url: '/tasks/users-by-project',
+                method: 'GET',
+                data: { project_id: projectId },
+                success: function(users) {
+                    $.each(users, function(index, user) {
+                        userSelect.append(`
+                            <option value="${user.id}">
+                                ${user.name} - ${user.position || 'N/A'}
+                            </option>
+                        `);
+                    });
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra khi tải danh sách người dùng');
+                }
+            });
+        });
+    }
+
+    // Setup for create form
+    setupProjectUserFilter('#projectSelect', '#userSelect');
+
+    // Setup for edit form
+    setupProjectUserFilter('#editProjectSelect', '#editUserSelect');
+});
+});
+</script>
 @endsection

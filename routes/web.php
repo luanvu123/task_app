@@ -19,6 +19,8 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
+      Route::get('/tasks/users-by-project', [TaskController::class, 'getUsersByProject'])
+        ->name('tasks.users-by-project');
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
     Route::resource('projects', ProjectController::class);

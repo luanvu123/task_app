@@ -279,10 +279,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Department::class, 'department_head_id');
     }
-      public function isDepartmentHead()
-    {
-        return $this->managedDepartment()->exists();
-    }
+     
      public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id')
@@ -379,5 +376,17 @@ public function getTaskCountByStatus($status = null)
 public function hasOverdueTasks()
 {
     return $this->overdueTasks()->exists();
+}
+public function isDepartmentHead()
+{
+    return $this->managedDepartments()->exists();
+}
+
+/**
+ * Lấy department mà user đang quản lý (sửa lỗi typo)
+ */
+public function managedDepartment()
+{
+    return $this->hasOne(Department::class, 'department_head_id');
 }
 }
