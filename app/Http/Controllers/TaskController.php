@@ -10,109 +10,65 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 class TaskController extends Controller
 {
-    public function getUsersByProject(Request $request)
-{
-    $projectId = $request->project_id;
-
-    if (!$projectId) {
-        return response()->json([]);
-    }
-
-    $project = Project::find($projectId);
-
-    if (!$project) {
-        return response()->json([]);
-    }
-
-    // Cách 1: Lấy tất cả users trong cùng department với project
-    $users = User::active()
-        ->where('department_id', $project->department_id)
-        ->select('id', 'name', 'email', 'position')
-        ->get();
-
-    // Cách 2: Chỉ lấy members của project (nếu có bảng project_users)
-    // $users = $project->members()
-    //     ->where('status', 'active')
-    //     ->select('users.id', 'users.name', 'users.email', 'users.position')
-    //     ->get();
-
-    // Cách 3: Kết hợp cả 2 - ưu tiên members của project, sau đó là users cùng department
-    // $projectMembers = $project->members()
-    //     ->where('status', 'active')
-    //     ->select('users.id', 'users.name', 'users.email', 'users.position')
-    //     ->get();
-
-    // $departmentUsers = User::active()
-    //     ->where('department_id', $project->department_id)
-    //     ->whereNotIn('id', $projectMembers->pluck('id'))
-    //     ->select('id', 'name', 'email', 'position')
-    //     ->get();
-
-    // $users = $projectMembers->merge($departmentUsers);
-
-    return response()->json($users);
-}
     /**
      * Display a listing of the resource.
      */
-    public function index()
-{
-    $user = Auth::user();
+     public function index()
+    {
+        $user = Auth::user();
 
-    // Lấy tất cả tasks của department
-    $allTasks = Task::with(['project.department', 'assignee'])
-        ->whereHas('project', function ($query) use ($user) {
-            $query->where('department_id', $user->department_id);
-        })
-        ->latest()
-        ->get();
+        // Lấy tất cả tasks của department
+        $allTasks = Task::with(['project.department', 'assignee'])
+            ->whereHas('project', function ($query) use ($user) {
+                $query->where('department_id', $user->department_id);
+            })
+            ->latest()
+            ->get();
 
-    // Group tasks theo status và đảm bảo tất cả status đều có key
-    $tasks = collect([
-        Task::STATUS_IN_PROGRESS => collect(),
-        Task::STATUS_NEEDS_REVIEW => collect(),
-        Task::STATUS_COMPLETED => collect(),
-    ])->merge($allTasks->groupBy('status'));
+        // Group tasks theo status và đảm bảo tất cả status đều có key
+        $tasks = collect([
+            Task::STATUS_IN_PROGRESS => collect(),
+            Task::STATUS_NEEDS_REVIEW => collect(),
+            Task::STATUS_COMPLETED => collect(),
+        ])->merge($allTasks->groupBy('status'));
 
-    // Chỉ lấy projects cùng department với thông tin members
-    $projects = Project::with(['department', 'members'])
-        ->where('department_id', $user->department_id)
-        ->get();
+        // Chỉ lấy projects cùng department
+        $projects = Project::with('department')
+            ->where('department_id', $user->department_id)
+            ->get();
 
-    // Lấy tất cả users trong department (dùng cho trường hợp fallback)
-    $users = User::active()
-        ->where('department_id', $user->department_id)
-        ->select('id', 'name', 'email', 'position', 'department_id')
-        ->get();
+        $users = User::active()
+            ->where('department_id', $user->department_id)
+            ->get();
 
-    // Lấy thống kê chỉ trong department
-    $taskStats = [
-        'total' => $allTasks->count(),
-        'in_progress' => $allTasks->where('status', Task::STATUS_IN_PROGRESS)->count(),
-        'needs_review' => $allTasks->where('status', Task::STATUS_NEEDS_REVIEW)->count(),
-        'completed' => $allTasks->where('status', Task::STATUS_COMPLETED)->count(),
-        'overdue' => $allTasks->filter(function($task) {
-            return $task->isOverdue();
-        })->count(),
-    ];
+        // Lấy thống kê chỉ trong department
+        $taskStats = [
+            'total' => $allTasks->count(),
+            'in_progress' => $allTasks->where('status', Task::STATUS_IN_PROGRESS)->count(),
+            'needs_review' => $allTasks->where('status', Task::STATUS_NEEDS_REVIEW)->count(),
+            'completed' => $allTasks->where('status', Task::STATUS_COMPLETED)->count(),
+            'overdue' => $allTasks->filter(function($task) {
+                return $task->isOverdue();
+            })->count(),
+        ];
 
-    // Lấy tasks gần đây trong department
-    $recentTasks = $allTasks->take(5);
+        // Lấy tasks gần đây trong department
+        $recentTasks = $allTasks->take(5);
 
-    // Truyền thêm các constants để sử dụng trong view
-    $taskPriorities = Task::getPriorities();
-    $taskStatuses = Task::getStatuses();
+        // Truyền thêm các constants để sử dụng trong view
+        $taskPriorities = Task::getPriorities();
+        $taskStatuses = Task::getStatuses();
 
-    return view('tasks.index', compact(
-        'tasks',
-        'projects',
-        'users',
-        'taskStats',
-        'recentTasks',
-        'taskPriorities',
-        'taskStatuses'
-    ));
-}
+        return view('tasks.index', compact(
+            'tasks',
+            'projects',
+            'users',
+            'taskStats',
+            'recentTasks',
+            'taskPriorities',
+            'taskStatuses'
+        ));
+    }
 
     /**
      * Show the form for creating a new resource.
