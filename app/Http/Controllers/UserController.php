@@ -26,7 +26,8 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $query = User::query();
- $departments = Department::where('status', 'active')->get();
+        $departments = Department::where('status', 'active')->get();
+
         // Lọc theo trạng thái nếu có
         if ($request->has('status') && in_array($request->status, ['active', 'inactive', 'suspended'])) {
             $query->where('status', $request->status);
@@ -37,9 +38,9 @@ class UserController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhere('position', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('position', 'like', "%{$search}%");
             });
         }
 
@@ -56,6 +57,64 @@ class UserController extends Controller
 
         return view('users.index', compact('users', 'departments'));
     }
+
+    public function leader(Request $request): View
+    {
+        try {
+            // Lấy danh sách users có role "Trưởng phòng"
+            $leaders = User::whereHas('roles', function ($query) {
+                $query->where('name', 'Trưởng phòng');
+            })
+            ->with([
+                'department',
+                'managedDepartment.employees',
+                'managedDepartment.projects' => function ($query) {
+                    $query->latest()->limit(1); // Lấy project gần nhất
+                }
+            ])
+            ->where('status', 'active') // Chỉ lấy user đang active
+            ->get();
+
+            // Thêm thông tin bổ sung cho mỗi leader
+            $leaders = $leaders->map(function ($leader) {
+                $managedDepartment = $leader->managedDepartment;
+
+                if ($managedDepartment) {
+                    // Lấy project gần nhất của phòng ban
+                    $latestProject = $managedDepartment->projects()
+                        ->latest('created_at')
+                        ->first();
+
+                    // Đếm số lượng task trong project gần nhất
+                    $taskCount = 0;
+                    if ($latestProject) {
+                        $taskCount = $latestProject->tasks()->count();
+                    }
+
+                    // Thêm thông tin vào object leader
+                    $leader->latest_project = $latestProject;
+                    $leader->task_count = $taskCount;
+                    $leader->staff_count = $managedDepartment->employees()->count();
+                } else {
+                    $leader->latest_project = null;
+                    $leader->task_count = 0;
+                    $leader->staff_count = 0;
+                }
+
+                return $leader;
+            });
+
+            return view('users.leader', compact('leaders'));
+
+        } catch (\Exception $e) {
+            // Log error và redirect về trang users với message
+            \Log::error('Error in leader method: ' . $e->getMessage());
+
+            return redirect()->route('users.index')
+                ->with('error', 'Không thể tải danh sách trưởng phòng. Vui lòng thử lại sau.');
+        }
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -75,103 +134,103 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   public function store(Request $request): RedirectResponse
-{
-    // Validation rules
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255|min:2',
-        'email' => 'required|email|unique:users,email|max:255',
-        'password' => 'required|string|min:8|max:255',
-        'department_id' => 'required|exists:departments,id',
-        'phone' => 'nullable|string|max:20|regex:/^[\d\s\+\-\(\)]+$/',
-        'dob' => 'nullable|date|before:today|after:1900-01-01',
-        'address' => 'nullable|string|max:1000',
-        'description' => 'nullable|string|max:2000',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
-        'position' => 'nullable|string|max:100',
-        'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
-        'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
-    ], [
-        // Custom error messages in Vietnamese
-        'name.required' => 'Họ và tên là bắt buộc.',
-        'name.min' => 'Họ và tên phải có ít nhất 2 ký tự.',
-        'name.max' => 'Họ và tên không được vượt quá 255 ký tự.',
-        'email.required' => 'Email là bắt buộc.',
-        'email.email' => 'Email không đúng định dạng.',
-        'email.unique' => 'Email này đã được sử dụng.',
-        'email.max' => 'Email không được vượt quá 255 ký tự.',
-        'password.required' => 'Mật khẩu là bắt buộc.',
-        'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
-        'password.max' => 'Mật khẩu không được vượt quá 255 ký tự.',
-        'department_id.required' => 'Phòng ban là bắt buộc.',
-        'department_id.exists' => 'Phòng ban được chọn không tồn tại.',
-        'phone.regex' => 'Số điện thoại không đúng định dạng.',
-        'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
-        'dob.date' => 'Ngày sinh không đúng định dạng.',
-        'dob.before' => 'Ngày sinh phải trước ngày hôm nay.',
-        'dob.after' => 'Ngày sinh không hợp lệ.',
-        'address.max' => 'Địa chỉ không được vượt quá 1000 ký tự.',
-        'description.max' => 'Mô tả không được vượt quá 2000 ký tự.',
-        'image.image' => 'File phải là hình ảnh.',
-        'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif.',
-        'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
-        'position.max' => 'Chức vụ không được vượt quá 100 ký tự.',
-        'gender.in' => 'Giới tính không hợp lệ.',
-        'status.required' => 'Trạng thái là bắt buộc.',
-        'status.in' => 'Trạng thái không hợp lệ.',
-    ]);
-
-    try {
-        // Xử lý upload ảnh
-        $imagePath = null;
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $imagePath = $image->storeAs('users/avatars', $imageName, 'public');
-        }
-
-        // Lấy thông tin department để hiển thị trong thông báo
-        $department = Department::find($validatedData['department_id']);
-
-        // Tạo user mới
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'department_id' => $validatedData['department_id'],
-            'phone' => $validatedData['phone'] ?? null,
-            'dob' => $validatedData['dob'] ?? null,
-            'address' => $validatedData['address'] ?? null,
-            'description' => $validatedData['description'] ?? null,
-            'image' => $imagePath,
-            'position' => $validatedData['position'] ?? null,
-            'gender' => $validatedData['gender'] ?? null,
-            'status' => $validatedData['status'],
+    public function store(Request $request): RedirectResponse
+    {
+        // Validation rules
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255|min:2',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|string|min:8|max:255',
+            'department_id' => 'required|exists:departments,id',
+            'phone' => 'nullable|string|max:20|regex:/^[\d\s\+\-\(\)]+$/',
+            'dob' => 'nullable|date|before:today|after:1900-01-01',
+            'address' => 'nullable|string|max:1000',
+            'description' => 'nullable|string|max:2000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
+            'position' => 'nullable|string|max:100',
+            'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
+            'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
+        ], [
+            // Custom error messages in Vietnamese
+            'name.required' => 'Họ và tên là bắt buộc.',
+            'name.min' => 'Họ và tên phải có ít nhất 2 ký tự.',
+            'name.max' => 'Họ và tên không được vượt quá 255 ký tự.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không đúng định dạng.',
+            'email.unique' => 'Email này đã được sử dụng.',
+            'email.max' => 'Email không được vượt quá 255 ký tự.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password.max' => 'Mật khẩu không được vượt quá 255 ký tự.',
+            'department_id.required' => 'Phòng ban là bắt buộc.',
+            'department_id.exists' => 'Phòng ban được chọn không tồn tại.',
+            'phone.regex' => 'Số điện thoại không đúng định dạng.',
+            'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
+            'dob.date' => 'Ngày sinh không đúng định dạng.',
+            'dob.before' => 'Ngày sinh phải trước ngày hôm nay.',
+            'dob.after' => 'Ngày sinh không hợp lệ.',
+            'address.max' => 'Địa chỉ không được vượt quá 1000 ký tự.',
+            'description.max' => 'Mô tả không được vượt quá 2000 ký tự.',
+            'image.image' => 'File phải là hình ảnh.',
+            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif.',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
+            'position.max' => 'Chức vụ không được vượt quá 100 ký tự.',
+            'gender.in' => 'Giới tính không hợp lệ.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái không hợp lệ.',
         ]);
 
-        // Thông báo thành công
-        return redirect()->route('users.index')
-            ->with('success', 'Tạo nhân viên mới thành công! Nhân viên ' . $user->name . ' đã được thêm vào phòng ban ' . $department->name . '.');
+        try {
+            // Xử lý upload ảnh
+            $imagePath = null;
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('users/avatars', $imageName, 'public');
+            }
 
-    } catch (\Exception $e) {
-        // Xóa file ảnh nếu có lỗi xảy ra sau khi upload
-        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
-            Storage::disk('public')->delete($imagePath);
+            // Lấy thông tin department để hiển thị trong thông báo
+            $department = Department::find($validatedData['department_id']);
+
+            // Tạo user mới
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
+                'department_id' => $validatedData['department_id'],
+                'phone' => $validatedData['phone'] ?? null,
+                'dob' => $validatedData['dob'] ?? null,
+                'address' => $validatedData['address'] ?? null,
+                'description' => $validatedData['description'] ?? null,
+                'image' => $imagePath,
+                'position' => $validatedData['position'] ?? null,
+                'gender' => $validatedData['gender'] ?? null,
+                'status' => $validatedData['status'],
+            ]);
+
+            // Thông báo thành công
+            return redirect()->route('users.index')
+                ->with('success', 'Tạo nhân viên mới thành công! Nhân viên ' . $user->name . ' đã được thêm vào phòng ban ' . $department->name . '.');
+
+        } catch (\Exception $e) {
+            // Xóa file ảnh nếu có lỗi xảy ra sau khi upload
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            // Log lỗi
+            \Log::error('Error creating user: ' . $e->getMessage(), [
+                'request_data' => $request->except('password'),
+                'user_ip' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+
+            // Thông báo lỗi
+            return redirect()->back()
+                ->withInput($request->except('password'))
+                ->with('error', 'Có lỗi xảy ra khi tạo nhân viên. Vui lòng thử lại.');
         }
-
-        // Log lỗi
-        \Log::error('Error creating user: ' . $e->getMessage(), [
-            'request_data' => $request->except('password'),
-            'user_ip' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-        ]);
-
-        // Thông báo lỗi
-        return redirect()->back()
-            ->withInput($request->except('password'))
-            ->with('error', 'Có lỗi xảy ra khi tạo nhân viên. Vui lòng thử lại.');
     }
-}
 
     /**
      * Display the specified resource.
@@ -188,8 +247,7 @@ class UserController extends Controller
 
         return view('users.show', compact('user', 'userRoles'));
     }
-
-    public function updatePersonalInfo(Request $request, $id)
+      public function updatePersonalInfo(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
@@ -202,7 +260,11 @@ class UserController extends Controller
         ]);
 
         $user->update($request->only([
-            'nationality', 'religion', 'marital_status', 'passport_no', 'emergency_contact'
+            'nationality',
+            'religion',
+            'marital_status',
+            'passport_no',
+            'emergency_contact'
         ]));
 
         return redirect()->back()->with('success', 'Thông tin cá nhân đã được cập nhật thành công!');
@@ -221,7 +283,11 @@ class UserController extends Controller
         ]);
 
         $user->update($request->only([
-            'bank_name', 'account_no', 'ifsc_code', 'pan_no', 'upi_id'
+            'bank_name',
+            'account_no',
+            'ifsc_code',
+            'pan_no',
+            'upi_id'
         ]));
 
         return redirect()->back()->with('success', 'Thông tin ngân hàng đã được cập nhật thành công!');
@@ -232,7 +298,7 @@ class UserController extends Controller
     {
         User::find($id)->delete();
         return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+            ->with('success', 'User deleted successfully');
     }
 
 
@@ -250,9 +316,9 @@ class UserController extends Controller
             // Lấy danh sách roles nếu sử dụng Spatie Permission
             $roles = [];
             $userRoles = [];
-        $departments = Department::where('status', 'active')
-            ->orderBy('name')
-            ->get();
+            $departments = Department::where('status', 'active')
+                ->orderBy('name')
+                ->get();
             if (class_exists('Spatie\Permission\Models\Role')) {
                 $roles = \Spatie\Permission\Models\Role::pluck('name', 'name')->all();
                 $userRoles = $user->roles->pluck('name', 'name')->all();
@@ -356,7 +422,7 @@ class UserController extends Controller
                 'position' => $validatedData['position'] ?? null,
                 'gender' => $validatedData['gender'] ?? null,
                 'status' => $validatedData['status'],
-                 'department_id' => $validatedData['department_id'] ?? null,
+                'department_id' => $validatedData['department_id'] ?? null,
             ];
 
             // Cập nhật mật khẩu nếu có
@@ -411,4 +477,194 @@ class UserController extends Controller
                 ->with('error', 'Có lỗi xảy ra khi cập nhật thông tin nhân viên. Vui lòng thử lại.');
         }
     }
+        /**
+ * Lấy thông tin nhân viên và dự án của trưởng phòng
+ */
+public function getStaffAndProject($leaderId)
+{
+    try {
+        // Validate leader ID
+        if (!is_numeric($leaderId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID trưởng phòng không hợp lệ'
+            ], 400);
+        }
+
+        $leader = User::with([
+            'managedDepartment.employees' => function ($query) {
+                $query->select([
+                    'id', 'name', 'email', 'position', 'status',
+                    'department_id', 'image', 'created_at'
+                ])
+                ->where('status', '!=', 'deleted')
+                ->orderBy('name');
+            },
+            'managedDepartment.projects' => function ($query) {
+                $query->latest('created_at')->limit(1);
+            }
+        ])->find($leaderId);
+
+        if (!$leader) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy trưởng phòng'
+            ], 404);
+        }
+
+        // Kiểm tra xem user có phải là trưởng phòng không
+        $hasLeaderRole = $leader->hasRole('Trưởng phòng');
+        if (!$hasLeaderRole) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User này không phải là trưởng phòng'
+            ], 403);
+        }
+
+        if (!$leader->managedDepartment) {
+            return response()->json([
+                'success' => true,
+                'staff' => [],
+                'staff_count' => 0,
+                'latest_project' => null,
+                'message' => 'Trưởng phòng chưa được phân công phòng ban'
+            ]);
+        }
+
+        // Format thông tin nhân viên
+        $staff = $leader->managedDepartment->employees->map(function ($employee) {
+            // Đếm tasks của employee (nếu có relationship)
+            $taskCount = 0;
+            try {
+                if (method_exists($employee, 'tasks')) {
+                    $taskCount = $employee->tasks()
+                        ->whereIn('status', ['in_progress', 'needs_review', 'pending'])
+                        ->count();
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Không thể đếm tasks cho employee: ' . $employee->id);
+            }
+
+            return [
+                'id' => $employee->id,
+                'name' => $employee->name,
+                'email' => $employee->email,
+                'position' => $employee->position ?? 'Chưa có chức vụ',
+                'status' => $employee->status,
+                'status_text' => $this->getUserStatusText($employee->status),
+                'image_url' => $employee->image
+                    ? asset('storage/' . $employee->image)
+                    : asset('assets/images/xs/avatar3.jpg'),
+                'task_count' => $taskCount,
+                'joined_date' => $employee->created_at ? $employee->created_at->format('d/m/Y') : null
+            ];
+        });
+
+        // Format thông tin dự án gần nhất
+        $latestProject = null;
+        if ($leader->managedDepartment->projects && $leader->managedDepartment->projects->isNotEmpty()) {
+            $project = $leader->managedDepartment->projects->first();
+
+            // Tính phần trăm hoàn thành (nếu có relationship với tasks)
+            $completionPercentage = 0;
+            try {
+                if (method_exists($project, 'tasks')) {
+                    $totalTasks = $project->tasks()->count();
+                    if ($totalTasks > 0) {
+                        $completedTasks = $project->tasks()
+                            ->where('status', 'completed')
+                            ->count();
+                        $completionPercentage = round(($completedTasks / $totalTasks) * 100);
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Không thể tính completion percentage cho project: ' . $project->id);
+            }
+
+            $latestProject = [
+                'id' => $project->id,
+                'name' => $project->name,
+                'description' => $project->description ?? 'Không có mô tả',
+                'status' => $project->status,
+                'status_text' => $this->getProjectStatusText($project->status),
+                'priority' => $project->priority ?? 'medium',
+                'start_date' => $project->start_date ? $project->start_date->format('Y-m-d') : null,
+                'end_date' => $project->end_date ? $project->end_date->format('Y-m-d') : null,
+                'start_date_formatted' => $project->start_date ? $project->start_date->format('d/m/Y') : 'Chưa xác định',
+                'end_date_formatted' => $project->end_date ? $project->end_date->format('d/m/Y') : 'Chưa xác định',
+                'budget' => $project->budget ?? 0,
+                'formatted_budget' => $this->formatCurrency($project->budget ?? 0),
+                'completion_percentage' => $completionPercentage,
+                'created_at' => $project->created_at ? $project->created_at->format('d/m/Y') : null
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'staff' => $staff->values()->toArray(),
+            'staff_count' => $staff->count(),
+            'latest_project' => $latestProject,
+            'department_name' => $leader->managedDepartment->name,
+            'leader_name' => $leader->name
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error in getStaffAndProject: ' . $e->getMessage(), [
+            'leader_id' => $leaderId,
+            'line' => $e->getLine(),
+            'file' => $e->getFile(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'error' => 'Lỗi server',
+            'message' => 'Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.',
+            'debug_message' => config('app.debug') ? $e->getMessage() : null
+        ], 500);
+    }
+}
+
+/**
+ * Chuyển đổi status user thành text tiếng Việt
+ */
+private function getUserStatusText($status): string
+{
+    return match ($status) {
+        'active' => 'Hoạt động',
+        'inactive' => 'Không hoạt động',
+        'suspended' => 'Bị đình chỉ',
+        'pending' => 'Chờ kích hoạt',
+        default => 'Không xác định'
+    };
+}
+
+/**
+ * Chuyển đổi status project thành text tiếng Việt
+ */
+private function getProjectStatusText($status): string
+{
+    return match ($status) {
+        'planning' => 'Đang lên kế hoạch',
+        'in_progress' => 'Đang thực hiện',
+        'on_hold' => 'Tạm dừng',
+        'completed' => 'Hoàn thành',
+        'cancelled' => 'Đã hủy',
+        'pending' => 'Chờ phê duyệt',
+        default => 'Không xác định'
+    };
+}
+
+/**
+ * Format tiền tệ VNĐ
+ */
+private function formatCurrency($amount): string
+{
+    if (!is_numeric($amount)) {
+        return '0 VNĐ';
+    }
+
+    return number_format($amount, 0, ',', '.') . ' VNĐ';
+}
+
 }

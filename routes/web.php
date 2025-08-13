@@ -23,13 +23,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('users', UserController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('tasks', TaskController::class);
-     Route::resource('timesheets', TimesheetController::class);
-
-    // Additional timesheet actions
+    Route::resource('timesheets', TimesheetController::class);
     Route::post('timesheets/{timesheet}/submit', [TimesheetController::class, 'submit'])->name('timesheets.submit');
+    Route::get('/leaders', [UserController::class, 'leader'])->name('users.leaders');
+    Route::get('/users/leaders/{id}/staff-and-project', [UserController::class, 'getStaffAndProject'])
+        ->name('users.leaders.staff-and-project');
     Route::post('timesheets/{timesheet}/approve', [TimesheetController::class, 'approve'])->name('timesheets.approve');
     Route::post('timesheets/{timesheet}/reject', [TimesheetController::class, 'reject'])->name('timesheets.reject');
- Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+    Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
     Route::get('projects/{project}/members', [TaskController::class, 'getProjectMembers'])->name('projects.members');
     Route::get('department/users', [TaskController::class, 'getDepartmentUsers'])->name('department.users');
     Route::get('projects/status/{status?}', [ProjectController::class, 'getProjectsByStatus'])

@@ -8,15 +8,23 @@
     <title>:: My-Task:: Employee Dashboard </title>
     <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon-->
 
-       <link rel="stylesheet" href="{{ asset('assets/css/theme-styles.css')}}">
-         <link rel="stylesheet" href="{{ asset('assets/plugin/nestable/jquery-nestable.css')}}"/>
-           <!-- project css file  -->
+    <link rel="stylesheet" href="{{ asset('assets/css/theme-styles.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/plugin/nestable/jquery-nestable.css')}}" />
+    <!-- project css file  -->
     <link rel="stylesheet" href="{{ asset('assets/css/my-task.style.min.css')}}">
-<!-- Trong <head> section -->
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Trong <head> section -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<!-- Trước closing </body> tag -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <!-- Trước closing </body> tag -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+
+
+    {{-- DataTables CSS --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    {{-- Icofont CSS --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/icofont/1.0.1/icofont.min.css" rel="stylesheet">
 </head>
 
 <body data-mytask="theme-indigo">
@@ -55,7 +63,7 @@
                             <li><a class="ms-link" href="{{route('projects.index')}}"><span>Projects</span></a></li>
                             <li><a class="ms-link" href="{{route('tasks.index')}}"><span>Tasks</span></a></li>
                             <li><a class="ms-link" href="{{route('timesheets.index')}}"><span>Timesheet</span></a></li>
-                            <li><a class="ms-link" href="team-leader.html"><span>Leaders</span></a></li>
+                            <li><a class="ms-link" href="{{ route('users.leaders') }}"><span>Leaders</span></a></li>
                         </ul>
                     </li>
 
@@ -304,29 +312,30 @@
                             </div>
                             <div class="dropdown user-profile ml-2 ml-sm-3 d-flex align-items-center">
                                 <div class="u-info me-2">
-                                    <p class="mb-0 text-end line-height-sm "><span class="font-weight-bold">{{ Auth::user()->name }}</span></p>
+                                    <p class="mb-0 text-end line-height-sm "><span
+                                            class="font-weight-bold">{{ Auth::user()->name }}</span></p>
                                     <small>{{ Auth::user()->role->name ?? 'User' }} Profile</small>
                                 </div>
                                 <a class="nav-link dropdown-toggle pulse p-0" href="#" role="button"
                                     data-bs-toggle="dropdown" data-bs-display="static">
-                                     <img class="avatar lg rounded-circle img-thumbnail"
-                src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('assets/images/profile_av.png') }}"
-                alt="profile">
+                                    <img class="avatar lg rounded-circle img-thumbnail"
+                                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('assets/images/profile_av.png') }}"
+                                        alt="profile">
                                 </a>
                                 <div
                                     class="dropdown-menu rounded-lg shadow border-0 dropdown-animation dropdown-menu-end p-0 m-0">
                                     <div class="card border-0 w280">
                                         <div class="card-body pb-0">
                                             <div class="d-flex py-1">
-                                                 <img class="avatar rounded-circle"
-                            src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('assets/images/profile_av.png') }}"
-                            alt="profile">
-                                               <div class="flex-fill ms-3">
-                            <p class="mb-0">
-                                <span class="font-weight-bold">{{ Auth::user()->name }}</span>
-                            </p>
-                            <small>{{ Auth::user()->email }}</small>
-                        </div>
+                                                <img class="avatar rounded-circle"
+                                                    src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('assets/images/profile_av.png') }}"
+                                                    alt="profile">
+                                                <div class="flex-fill ms-3">
+                                                    <p class="mb-0">
+                                                        <span class="font-weight-bold">{{ Auth::user()->name }}</span>
+                                                    </p>
+                                                    <small>{{ Auth::user()->email }}</small>
+                                                </div>
                                             </div>
 
                                             <div>
@@ -337,15 +346,17 @@
                                             <a href="task.html"
                                                 class="list-group-item list-group-item-action border-0 "><i
                                                     class="icofont-tasks fs-5 me-3"></i>My Task</a>
- <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action border-0">
-                        <i class="icofont-ui-user-group fs-6 me-3"></i>Members
-                    </a>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="list-group-item list-group-item-action border-0">
-                            <i class="icofont-logout fs-6 me-3"></i>Signout
-                        </button>
-                    </form>
+                                            <a href="{{ route('users.index') }}"
+                                                class="list-group-item list-group-item-action border-0">
+                                                <i class="icofont-ui-user-group fs-6 me-3"></i>Members
+                                            </a>
+                                            <form action="{{ route('logout') }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="list-group-item list-group-item-action border-0">
+                                                    <i class="icofont-logout fs-6 me-3"></i>Signout
+                                                </button>
+                                            </form>
                                             <div>
                                                 <hr class="dropdown-divider border-dark">
                                             </div>
@@ -468,6 +479,11 @@
     <script src="{{ asset('js/page/theme-settings.js') }}"></script>
 
 
+
+    {{-- DataTables JS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap5.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>
