@@ -188,7 +188,9 @@
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <h6 class="fw-bold mb-1 task-title">{{ $task->name }}</h6>
+                                            <a href="{{ route('tasks.show', $task) }}" class="task-link text-decoration-none">
+                                <h6 class="fw-bold mb-1 task-title text-dark">{{ $task->name }}</h6>
+                            </a>
                                                 <p class="mb-2 small text-muted">{{ Str::limit($task->description, 100) }}</p>
                                                 <div class="tikit-info d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
@@ -253,7 +255,9 @@
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <h6 class="fw-bold mb-1 task-title">{{ $task->name }}</h6>
+                                             <a href="{{ route('tasks.show', $task) }}" class="task-link text-decoration-none">
+                                <h6 class="fw-bold mb-1 task-title text-dark">{{ $task->name }}</h6>
+                            </a>
                                                 <p class="mb-2 small text-muted">{{ Str::limit($task->description, 100) }}</p>
                                                 <div class="tikit-info d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
@@ -316,8 +320,9 @@
                                                             THÀNH</span>
                                                     </div>
                                                 </div>
-                                                <h6 class="fw-bold mb-1 text-decoration-line-through task-title">
-                                                    {{ $task->name }}</h6>
+                                              <a href="{{ route('tasks.show', $task) }}" class="task-link text-decoration-none">
+                                <h6 class="fw-bold mb-1 task-title text-dark">{{ $task->name }}</h6>
+                            </a>
                                                 <p class="mb-2 small text-muted">{{ Str::limit($task->description, 100) }}</p>
                                                 <div class="tikit-info d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">

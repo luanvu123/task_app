@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="{{ asset('assets/css/my-task.style.min.css')}}">
     <!-- Trong <head> section -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+<!-- Font Awesome 5 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Hoặc Font Awesome 4 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Trước closing </body> tag -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
@@ -76,56 +81,20 @@
                             <li><a class="ms-link" href="{{ route('users.index') }}"> <span>Quản lý nhân viên</span></a>
                             </li>
                             <li><a class="ms-link" href="{{ route('roles.index') }}"> <span>Phân quyền</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="collapsed">
-                        <a class="m-link" data-bs-toggle="collapse" data-bs-target="#client-Components" href="#"><i
-                                class="icofont-user-male"></i> <span>Our Clients</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse" id="client-Components">
-                            <li><a class="ms-link" href="ourclients.html"> <span>Clients</span></a></li>
-                            <li><a class="ms-link" href="profile.html"> <span>Client Profile</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="collapsed">
-                        <a class="m-link" data-bs-toggle="collapse" data-bs-target="#emp-Components" href="#"><i
-                                class="icofont-users-alt-5"></i> <span>Employees</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse" id="emp-Components">
-                            <li><a class="ms-link" href="members.html"> <span>Members</span></a></li>
-                            <li><a class="ms-link" href="employee-profile.html"> <span>Members Profile</span></a></li>
-                            <li><a class="ms-link" href="holidays.html"> <span>Holidays</span></a></li>
-                            <li><a class="ms-link" href="attendance-employees.html"> <span>Attendance
-                                        Employees</span></a></li>
-                            <li><a class="ms-link" href="attendance.html"> <span>Attendance</span></a></li>
-                            <li><a class="ms-link" href="leave-request.html"> <span>Leave Request</span></a></li>
-                            <li><a class="ms-link" href="{{route('departments.index')}}"> <span>Department</span></a>
-                            </li>
-                            <li><a class="ms-link" href="loan.html"> <span>Loan</span></a></li>
+                              <li><a class="ms-link" href="{{route('departments.index')}}"> <span>Department</span></a>
                         </ul>
                     </li>
 
-                    <li class="collapsed">
-                        <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-Componentsone" href="#"><i
-                                class="icofont-ui-calculator"></i> <span>Accounts</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse" id="menu-Componentsone">
-                            <li><a class="ms-link" href="invoices.html"><span>Invoices</span> </a></li>
-                            <li><a class="ms-link" href="payments.html"><span>Payments</span> </a></li>
-                            <li><a class="ms-link" href="expenses.html"><span>Expenses</span> </a></li>
-                            <li><a class="ms-link" href="create-invoice.html"><span>Create Invoice</span> </a></li>
-                        </ul>
-                    </li>
+
+
+
                     <li class="collapsed">
                         <a class="m-link" data-bs-toggle="collapse" data-bs-target="#payroll-Components" href="#"><i
                                 class="icofont-users-alt-5"></i> <span>Payroll</span> <span
                                 class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="payroll-Components">
-                            <li><a class="ms-link" href="salaryslip.html"><span>Employee Salary</span> </a></li>
+                            <li><a class="ms-link" href="{{ route('salaryslips.index') }}"><span>Employee Salary</span> </a></li>
 
                         </ul>
                     </li>

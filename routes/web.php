@@ -3,6 +3,7 @@
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SalaryslipController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('projects', ProjectController::class);
     Route::resource('tasks', TaskController::class);
     Route::resource('timesheets', TimesheetController::class);
+    Route::resource('salaryslips', SalaryslipController::class);
+
+    // Additional routes
+    Route::patch('salaryslips/{salaryslip}/status', [SalaryslipController::class, 'updateStatus'])
+         ->name('salaryslips.updateStatus');
+
+    Route::get('salaryslips/{salaryslip}/print', [SalaryslipController::class, 'print'])
+         ->name('salaryslips.print');
     Route::post('timesheets/{timesheet}/submit', [TimesheetController::class, 'submit'])->name('timesheets.submit');
     Route::get('/leaders', [UserController::class, 'leader'])->name('users.leaders');
     Route::get('/users/leaders/{id}/staff-and-project', [UserController::class, 'getStaffAndProject'])
