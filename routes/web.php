@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -23,8 +23,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('users', UserController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('tasks', TaskController::class);
-    Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.update-status');
+     Route::resource('timesheets', TimesheetController::class);
+
+    // Additional timesheet actions
+    Route::post('timesheets/{timesheet}/submit', [TimesheetController::class, 'submit'])->name('timesheets.submit');
+    Route::post('timesheets/{timesheet}/approve', [TimesheetController::class, 'approve'])->name('timesheets.approve');
+    Route::post('timesheets/{timesheet}/reject', [TimesheetController::class, 'reject'])->name('timesheets.reject');
+ Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
     Route::get('projects/{project}/members', [TaskController::class, 'getProjectMembers'])->name('projects.members');
+    Route::get('department/users', [TaskController::class, 'getDepartmentUsers'])->name('department.users');
     Route::get('projects/status/{status?}', [ProjectController::class, 'getProjectsByStatus'])
         ->name('projects.by-status');
     Route::resource('departments', DepartmentController::class);

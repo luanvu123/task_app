@@ -8,12 +8,13 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-     public function index()
+    public function index()
     {
         $user = Auth::user();
 
@@ -37,7 +38,9 @@ class TaskController extends Controller
             ->where('department_id', $user->department_id)
             ->get();
 
-        $users = User::active()
+        // Lấy users cùng department với thông tin projects
+        $users = User::with('projects')
+            ->active()
             ->where('department_id', $user->department_id)
             ->get();
 
@@ -82,8 +85,9 @@ class TaskController extends Controller
             ->where('department_id', $user->department_id)
             ->get();
 
-        // Chỉ lấy users trong department
-        $users = User::active()
+        // Chỉ lấy users trong department với thông tin projects
+        $users = User::with('projects')
+            ->active()
             ->where('department_id', $user->department_id)
             ->get();
 
@@ -95,70 +99,89 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'project_id' => 'required|exists:projects,id',
-            'user_id' => 'required|exists:users,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'priority' => 'required|in:low,medium,high,urgent',
-            'description' => 'nullable|string',
-            'image_and_document' => 'nullable|array',
-            'image_and_document.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
-        ], [
-            'name.required' => 'Tên công việc là bắt buộc',
-            'project_id.required' => 'Vui lòng chọn dự án',
-            'user_id.required' => 'Vui lòng chọn người thực hiện',
-            'start_date.required' => 'Ngày bắt đầu là bắt buộc',
-            'end_date.required' => 'Ngày kết thúc là bắt buộc',
-            'end_date.after' => 'Ngày kết thúc phải sau ngày bắt đầu',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'project_id' => 'required|exists:projects,id',
+                'user_id' => 'required|exists:users,id',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after:start_date',
+                'priority' => 'required|in:low,medium,high,urgent',
+                'description' => 'nullable|string',
+                'image_and_document' => 'nullable|array',
+                'image_and_document.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
+            ], [
+                'name.required' => 'Tên công việc là bắt buộc',
+                'project_id.required' => 'Vui lòng chọn dự án',
+                'project_id.exists' => 'Dự án không tồn tại',
+                'user_id.required' => 'Vui lòng chọn người thực hiện',
+                'user_id.exists' => 'Người dùng không tồn tại',
+                'start_date.required' => 'Ngày bắt đầu là bắt buộc',
+                'end_date.required' => 'Ngày kết thúc là bắt buộc',
+                'end_date.after' => 'Ngày kết thúc phải sau ngày bắt đầu',
+                'priority.required' => 'Vui lòng chọn độ ưu tiên',
+                'priority.in' => 'Độ ưu tiên không hợp lệ',
+                'image_and_document.*.file' => 'File tải lên không hợp lệ',
+                'image_and_document.*.mimes' => 'File phải có định dạng: jpg, jpeg, png, pdf, doc, docx',
+                'image_and_document.*.max' => 'File không được vượt quá 5MB',
+            ]);
 
-        $user = Auth::user();
+            $user = Auth::user();
 
-        // Kiểm tra project có thuộc department của user không
-        $project = Project::findOrFail($validated['project_id']);
-        if ($project->department_id !== $user->department_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn không có quyền tạo task cho dự án này.'
-            ], 403);
-        }
-
-        // Kiểm tra user được assign có thuộc department không
-        $assignee = User::findOrFail($validated['user_id']);
-        if ($assignee->department_id !== $user->department_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn chỉ có thể giao việc cho nhân viên trong phòng ban của mình.'
-            ], 403);
-        }
-
-        $task = new Task($validated);
-
-        // Xử lý upload files
-        if ($request->hasFile('image_and_document')) {
-            $files = [];
-            foreach ($request->file('image_and_document') as $file) {
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('tasks', $filename, 'public');
-                $files[] = [
-                    'name' => $file->getClientOriginalName(),
-                    'path' => $path,
-                    'size' => $file->getSize(),
-                    'type' => $file->getMimeType()
-                ];
+            // Kiểm tra project có thuộc department của user không
+            $project = Project::findOrFail($validated['project_id']);
+            if ($project->department_id !== $user->department_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bạn không có quyền tạo task cho dự án này.'
+                ], 403);
             }
-            $task->image_and_document = $files;
+
+            // Kiểm tra user được assign có thuộc department không
+            $assignee = User::findOrFail($validated['user_id']);
+            if ($assignee->department_id !== $user->department_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bạn chỉ có thể giao việc cho nhân viên trong phòng ban của mình.'
+                ], 403);
+            }
+
+            $task = new Task($validated);
+
+            // Xử lý upload files
+            if ($request->hasFile('image_and_document')) {
+                $files = [];
+                foreach ($request->file('image_and_document') as $file) {
+                    $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $path = $file->storeAs('tasks', $filename, 'public');
+                    $files[] = [
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $path,
+                        'size' => $file->getSize(),
+                        'type' => $file->getMimeType()
+                    ];
+                }
+                $task->image_and_document = $files;
+            }
+
+            $task->save();
+
+           return redirect()->route('tasks.index')
+                        ->with('success', 'Công việc đã được tạo thành công!');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error creating task: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi tạo công việc. Vui lòng thử lại.'
+            ], 500);
         }
-
-        $task->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Tạo công việc thành công!',
-            'task' => $task->load(['project', 'assignee'])
-        ]);
     }
 
     /**
@@ -195,7 +218,8 @@ class TaskController extends Controller
             ->where('department_id', $user->department_id)
             ->get();
 
-        $users = User::active()
+        $users = User::with('projects')
+            ->active()
             ->where('department_id', $user->department_id)
             ->get();
 
@@ -375,7 +399,8 @@ class TaskController extends Controller
     }
 
     /**
-     * Get project members
+     * Get project members - Legacy method for backward compatibility
+     * Now returns all department users with project membership info
      */
     public function getProjectMembers(Project $project)
     {
@@ -389,10 +414,43 @@ class TaskController extends Controller
             ], 403);
         }
 
-        $members = $project->members()
-            ->where('department_id', $user->department_id) // Chỉ lấy members cùng department
-            ->get();
+        // Trả về tất cả users trong department với thông tin có phải member của project không
+        $users = User::with('projects')
+            ->active()
+            ->where('department_id', $user->department_id)
+            ->get()
+            ->map(function ($user) use ($project) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'position' => $user->position ?? 'Nhân viên',
+                    'is_project_member' => $user->projects->contains($project->id)
+                ];
+            });
 
-        return response()->json($members);
+        return response()->json($users);
+    }
+
+    /**
+     * Get all department users for task assignment
+     */
+    public function getDepartmentUsers()
+    {
+        $user = Auth::user();
+
+        $users = User::with('projects')
+            ->active()
+            ->where('department_id', $user->department_id)
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'position' => $user->position ?? 'Nhân viên',
+                    'project_ids' => $user->projects->pluck('id')->toArray()
+                ];
+            });
+
+        return response()->json($users);
     }
 }

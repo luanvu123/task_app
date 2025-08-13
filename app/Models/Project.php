@@ -166,62 +166,111 @@ class Project extends Model
             self::PRIORITY_URGENT => 'Khẩn cấp'
         ];
     }
-   /**
- * Quan hệ với Task (Dự án có nhiều công việc)
- */
-public function tasks()
-{
-    return $this->hasMany(Task::class);
-}
-
-/**
- * Lấy các task đang thực hiện
- */
-public function inProgressTasks()
-{
-    return $this->tasks()->where('status', Task::STATUS_IN_PROGRESS);
-}
-
-/**
- * Lấy các task cần xem xét
- */
-public function needsReviewTasks()
-{
-    return $this->tasks()->where('status', Task::STATUS_NEEDS_REVIEW);
-}
-
-/**
- * Lấy các task đã hoàn thành
- */
-public function completedTasks()
-{
-    return $this->tasks()->where('status', Task::STATUS_COMPLETED);
-}
-
-/**
- * Tính phần trăm hoàn thành dự án dựa trên tasks
- */
-public function getCompletionPercentageAttribute()
-{
-    $totalTasks = $this->tasks()->count();
-    if ($totalTasks === 0) {
-        return 0;
+    /**
+     * Quan hệ với Task (Dự án có nhiều công việc)
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 
-    $completedTasks = $this->completedTasks()->count();
-    return round(($completedTasks / $totalTasks) * 100, 2);
-}
+    /**
+     * Lấy các task đang thực hiện
+     */
+    public function inProgressTasks()
+    {
+        return $this->tasks()->where('status', Task::STATUS_IN_PROGRESS);
+    }
 
-/**
- * Kiểm tra xem dự án có tasks quá hạn không
- */
-public function hasOverdueTasks()
-{
-    return $this->tasks()
-        ->where('end_date', '<', now())
-        ->where('status', '!=', Task::STATUS_COMPLETED)
-        ->exists();
-}
+    /**
+     * Lấy các task cần xem xét
+     */
+    public function needsReviewTasks()
+    {
+        return $this->tasks()->where('status', Task::STATUS_NEEDS_REVIEW);
+    }
 
+    /**
+     * Lấy các task đã hoàn thành
+     */
+    public function completedTasks()
+    {
+        return $this->tasks()->where('status', Task::STATUS_COMPLETED);
+    }
+
+    /**
+     * Tính phần trăm hoàn thành dự án dựa trên tasks
+     */
+    public function getCompletionPercentageAttribute()
+    {
+        $totalTasks = $this->tasks()->count();
+        if ($totalTasks === 0) {
+            return 0;
+        }
+
+        $completedTasks = $this->completedTasks()->count();
+        return round(($completedTasks / $totalTasks) * 100, 2);
+    }
+
+    /**
+     * Kiểm tra xem dự án có tasks quá hạn không
+     */
+    public function hasOverdueTasks()
+    {
+        return $this->tasks()
+            ->where('end_date', '<', now())
+            ->where('status', '!=', Task::STATUS_COMPLETED)
+            ->exists();
+    }
+    /**
+     * Quan hệ với ProjectTimesheet (Dự án có nhiều timesheet)
+     */
+    public function timesheets()
+    {
+        return $this->hasMany(ProjectTimesheet::class);
+    }
+
+    /**
+     * Lấy timesheets của tuần hiện tại
+     */
+    public function currentWeekTimesheets()
+    {
+        $startOfWeek = now()->startOfWeek();
+        return $this->timesheets()->forWeek($startOfWeek);
+    }
+
+    /**
+     * Lấy timesheets của tháng hiện tại
+     */
+    public function currentMonthTimesheets()
+    {
+        return $this->timesheets()->forMonth(now()->year, now()->month);
+    }
+
+    /**
+     * Tính tổng số giờ làm việc của dự án
+     */
+    public function getTotalWorkedHoursAttribute()
+    {
+        return $this->timesheets()
+            ->where('status', ProjectTimesheet::STATUS_APPROVED)
+            ->sum('total_hours');
+    }
+
+    /**
+     * Lấy timesheets pending approval
+     */
+    public function pendingTimesheets()
+    {
+        return $this->timesheets()->where('status', ProjectTimesheet::STATUS_SUBMITTED);
+    }
+
+    /**
+     * Kiểm tra xem có timesheet pending không
+     */
+    public function hasPendingTimesheets()
+    {
+        return $this->pendingTimesheets()->exists();
+    }
 }
 

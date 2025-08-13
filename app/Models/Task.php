@@ -185,4 +185,14 @@ public function scopeViewableByUser($query, $user = null)
 
     return $query->byDepartment($user->department_id);
 }
+// Trong App\Models\Task.php
+public function canBeUpdatedBy($user)
+{
+    return $this->user_id === $user->id || $user->isDepartmentHead();
+}
+
+public function canBeCompletedBy($user)
+{
+    return $this->user_id === $user->id || $user->isDepartmentHead();
+}
 }

@@ -7,9 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>:: My-Task:: Employee Dashboard </title>
     <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon-->
-    <!-- project css file  -->
-    <link rel="stylesheet" href="{{ asset('assets/css/my-task.style.min.css')}}">
+
        <link rel="stylesheet" href="{{ asset('assets/css/theme-styles.css')}}">
+         <link rel="stylesheet" href="{{ asset('assets/plugin/nestable/jquery-nestable.css')}}"/>
+           <!-- project css file  -->
+    <link rel="stylesheet" href="{{ asset('assets/css/my-task.style.min.css')}}">
+<!-- Trong <head> section -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<!-- Trước closing </body> tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 </head>
 
 <body data-mytask="theme-indigo">
@@ -47,7 +54,7 @@
                         <ul class="sub-menu collapse" id="project-Components">
                             <li><a class="ms-link" href="{{route('projects.index')}}"><span>Projects</span></a></li>
                             <li><a class="ms-link" href="{{route('tasks.index')}}"><span>Tasks</span></a></li>
-                            <li><a class="ms-link" href="timesheet.html"><span>Timesheet</span></a></li>
+                            <li><a class="ms-link" href="{{route('timesheets.index')}}"><span>Timesheet</span></a></li>
                             <li><a class="ms-link" href="team-leader.html"><span>Leaders</span></a></li>
                         </ul>
                     </li>
@@ -454,11 +461,13 @@
 
     <!-- Plugin Js-->
     <script src="{{ asset('assets/bundles/apexcharts.bundle.js') }}"></script>
-
+    <script src="{{ asset('js/page/task.js') }}"></script>
     <!-- Jquery Page Js -->
     <script src="{{ asset('js/template.js') }}"></script>
     <script src="{{ asset('js/page/hr.js') }}"></script>
     <script src="{{ asset('js/page/theme-settings.js') }}"></script>
+
+
 </body>
 
 </html>
