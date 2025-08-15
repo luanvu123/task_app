@@ -5,12 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Project;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+         $this->middleware('permission:task-list|task-create|task-edit|task-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:task-create', ['only' => ['create','store']]);
+        $this->middleware('permission:task-edit', ['only' => ['edit','update','updateStatus']]);
+        $this->middleware('permission:task-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:task-list', ['only' => ['getProjectMembers','getDepartmentUsers']]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -50,7 +62,7 @@ class TaskController extends Controller
             'in_progress' => $allTasks->where('status', Task::STATUS_IN_PROGRESS)->count(),
             'needs_review' => $allTasks->where('status', Task::STATUS_NEEDS_REVIEW)->count(),
             'completed' => $allTasks->where('status', Task::STATUS_COMPLETED)->count(),
-            'overdue' => $allTasks->filter(function($task) {
+            'overdue' => $allTasks->filter(function ($task) {
                 return $task->isOverdue();
             })->count(),
         ];
@@ -165,9 +177,15 @@ class TaskController extends Controller
             }
 
             $task->save();
+            // Load relationship cho notification
+            $task->load('project');
 
-           return redirect()->route('tasks.index')
-                        ->with('success', 'Công việc đã được tạo thành công!');
+            // Tạo thông báo cho người được giao task (nếu không phải chính mình)
+            if ($task->user_id != $user->id) {
+                $this->notificationService->createTaskNotification($task, $user->id);
+            }
+            return redirect()->route('tasks.index')
+                ->with('success', 'Công việc đã được tạo thành công!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -314,9 +332,15 @@ class TaskController extends Controller
             }
             $validated['image_and_document'] = $files;
         }
-
+        $oldStatus = $task->status;
         $task->update($validated);
-
+        if ($task->user_id != $user->id) {
+            if ($oldStatus != $task->status) {
+                $this->notificationService->createTaskUpdateNotification($task, $user->id, 'status_changed');
+            } else {
+                $this->notificationService->createTaskUpdateNotification($task, $user->id, 'updated');
+            }
+        }
         return response()->json([
             'success' => true,
             'message' => 'Cập nhật công việc thành công!',
@@ -397,7 +421,38 @@ class TaskController extends Controller
             'task' => $task->load(['project', 'assignee'])
         ]);
     }
+    public function markCompleted(Request $request, Task $task)
+    {
+        try {
+            $user = Auth::user();
 
+            if (!$task->canBeCompletedBy($user)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bạn không có quyền đánh dấu hoàn thành công việc này.'
+                ], 403);
+            }
+
+            $task->update(['status' => Task::STATUS_COMPLETED]);
+
+            // Tạo thông báo nếu người đánh dấu hoàn thành khác người được giao
+            if ($task->user_id != $user->id) {
+                $this->notificationService->createTaskUpdateNotification($task, $user->id, 'completed');
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Công việc đã được đánh dấu hoàn thành!'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error marking task completed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra.'
+            ], 500);
+        }
+    }
     /**
      * Get project members - Legacy method for backward compatibility
      * Now returns all department users with project membership info

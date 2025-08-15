@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProposesController;
 use App\Http\Controllers\SalaryslipController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
@@ -26,7 +30,55 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('tasks', TaskController::class);
     Route::resource('timesheets', TimesheetController::class);
     Route::resource('salaryslips', SalaryslipController::class);
+    Route::resource('vendors', VendorController::class);
+     Route::resource('item-categories', ItemCategoryController::class);
+       Route::resource('proposes', ProposesController::class);
 
+    // Additional propose actions
+    Route::prefix('proposes')->name('proposes.')->group(function () {
+
+        // Submit propose for review
+        Route::patch('{propose}/submit', [ProposesController::class, 'submit'])
+            ->name('submit');
+
+        // Review propose (for reviewers)
+        Route::patch('{propose}/review', [ProposesController::class, 'review'])
+            ->name('review')
+            ->middleware('can:review,propose');
+
+        // Approve/reject propose (for approvers)
+        Route::patch('{propose}/approve', [ProposesController::class, 'approve'])
+            ->name('approve')
+            ->middleware('can:approve,propose');
+
+        // Cancel propose
+        Route::patch('{propose}/cancel', [ProposesController::class, 'cancel'])
+            ->name('cancel')
+            ->middleware('can:update,propose');
+
+        // Statistics for dashboard
+        Route::get('statistics', [ProposesController::class, 'statistics'])
+            ->name('statistics');
+
+        // Export proposes
+        Route::get('export', [ProposesController::class, 'export'])
+            ->name('export')
+            ->middleware('can:export-proposes');
+
+        // Download attachment
+        Route::get('{propose}/attachments/{index}', [ProposesController::class, 'downloadAttachment'])
+            ->name('download-attachment')
+            ->middleware('can:view,propose');
+    });
+    Route::get('proposes/{propose}/download-attachment/{index}', [ProposesController::class, 'downloadAttachment'])->name('proposes.download-attachment');
+    Route::patch('item-categories/{itemCategory}/toggle-active', [ItemCategoryController::class, 'toggleActive'])
+         ->name('item-categories.toggle-active');
+  Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/unread', [NotificationController::class, 'getUnreadNotifications'])->name('notifications.unread');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+    Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::get('/notifications/load-more', [NotificationController::class, 'loadMore'])->name('notifications.load-more');
     // Additional routes
     Route::patch('salaryslips/{salaryslip}/status', [SalaryslipController::class, 'updateStatus'])
          ->name('salaryslips.updateStatus');

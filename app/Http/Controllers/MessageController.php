@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,9 +13,18 @@ use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
-    public function __construct()
+    protected $notificationService;
+
+
+    public function __construct(NotificationService $notificationService)
     {
-        $this->middleware('auth');
+        $this->notificationService = $notificationService;
+         $this->middleware('permission:message-list', ['only' => ['index','getMessages','search']]);
+        $this->middleware('permission:message-create', ['only' => ['sendMessage','startConversation']]);
+        $this->middleware('permission:message-group-create', ['only' => ['createGroup']]);
+        $this->middleware('permission:message-group-manage', ['only' => ['addParticipants','leaveGroup']]);
+        $this->middleware('permission:message-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:message-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -37,7 +47,7 @@ class MessageController extends Controller
         if ($request->has('conversation_id')) {
             $currentConversation = Conversation::with(['participants', 'messages.user'])
                 ->where('id', $request->conversation_id)
-                ->whereHas('participants', function($query) use ($currentUser) {
+                ->whereHas('participants', function ($query) use ($currentUser) {
                     $query->where('user_id', $currentUser->id);
                 })
                 ->first();
@@ -195,7 +205,11 @@ class MessageController extends Controller
 
             // Cập nhật thời gian tin nhắn cuối cùng
             $conversation->update(['last_message_at' => now()]);
+  // Load user relationship để trả về và tạo notification
+            $message->load(['user', 'conversation']);
 
+            // Tạo thông báo cho các participants khác
+            $this->notificationService->createMessageNotification($message);
             DB::commit();
 
             // Load user relationship để trả về
@@ -268,11 +282,11 @@ class MessageController extends Controller
         try {
             $conversations = $currentUser->conversations()
                 ->with(['lastMessage.user', 'participants'])
-                ->where(function($q) use ($query) {
+                ->where(function ($q) use ($query) {
                     $q->where('title', 'like', "%{$query}%")
-                      ->orWhereHas('participants', function($subQ) use ($query) {
-                          $subQ->where('name', 'like', "%{$query}%");
-                      });
+                        ->orWhereHas('participants', function ($subQ) use ($query) {
+                            $subQ->where('name', 'like', "%{$query}%");
+                        });
                 })
                 ->orderByDesc('last_message_at')
                 ->get();

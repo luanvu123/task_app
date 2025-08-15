@@ -10,9 +10,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+       function __construct()
+    {
+        $this->middleware('permission:project-list|project-create|project-edit|project-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:project-create', ['only' => ['create','store']]);
+        $this->middleware('permission:project-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:project-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:project-list', ['only' => ['getProjectsByStatus']]);
+    }
+
     public function index()
     {
         $projects = Project::with(['department', 'manager', 'members'])->get();

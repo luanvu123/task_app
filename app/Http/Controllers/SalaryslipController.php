@@ -10,6 +10,15 @@ use Illuminate\Validation\Rule;
 
 class SalaryslipController extends Controller
 {
+     function __construct()
+    {
+        $this->middleware('permission:salaryslip-list|salaryslip-create|salaryslip-edit|salaryslip-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:salaryslip-create', ['only' => ['create','store']]);
+        $this->middleware('permission:salaryslip-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:salaryslip-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:salaryslip-status', ['only' => ['updateStatus']]);
+        $this->middleware('permission:salaryslip-print', ['only' => ['print']]);
+    }
     /**
      * Display a listing of the resource.
      */

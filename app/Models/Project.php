@@ -272,5 +272,19 @@ class Project extends Model
     {
         return $this->pendingTimesheets()->exists();
     }
+    public function proposes()
+{
+    return $this->hasMany(Propose::class);
+}
+
+public function getTotalProposedAmount()
+{
+    return $this->proposes()->sum('total_amount');
+}
+
+public function getPendingProposes()
+{
+    return $this->proposes()->whereIn('status', ['submitted', 'under_review', 'pending_approval']);
+}
 }
 

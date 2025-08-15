@@ -279,7 +279,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Department::class, 'department_head_id');
     }
-     
+
      public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id')
@@ -389,4 +389,33 @@ public function managedDepartment()
 {
     return $this->hasOne(Department::class, 'department_head_id');
 }
+public function notifications()
+{
+    return $this->hasMany(Notification::class)->orderByDesc('created_at');
+}
+
+/**
+ * Quan hệ với Notifications (người gửi)
+ */
+public function sentNotifications()
+{
+    return $this->hasMany(Notification::class, 'from_user_id');
+}
+
+/**
+ * Lấy thông báo chưa đọc
+ */
+public function unreadNotifications()
+{
+    return $this->notifications()->where('is_read', false);
+}
+
+/**
+ * Đếm số thông báo chưa đọc
+ */
+public function getUnreadNotificationsCountAttribute()
+{
+    return $this->unreadNotifications()->count();
+}
+protected $appends = ['unread_notifications_count'];
 }

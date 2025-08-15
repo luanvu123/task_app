@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class TimesheetController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:timesheet-list|timesheet-create|timesheet-edit|timesheet-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:timesheet-create', ['only' => ['create','store']]);
+        $this->middleware('permission:timesheet-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:timesheet-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:timesheet-submit', ['only' => ['submit']]);
+        $this->middleware('permission:timesheet-approve', ['only' => ['approve']]);
+        $this->middleware('permission:timesheet-reject', ['only' => ['reject']]);
+    }
     /**
      * Display a listing of the resource.
      */

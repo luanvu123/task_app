@@ -13,10 +13,15 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
-    {
-        // $schedule->command('inspire')->hourly();
-    }
+   protected $commands = [
+    Commands\CleanupOldNotifications::class,
+];
+
+protected function schedule(Schedule $schedule)
+{
+    // Chạy cleanup notifications hàng ngày lúc 2:00 AM
+    $schedule->command('notifications:cleanup')->daily()->at('02:00');
+}
 
     /**
      * Register the commands for the application.
