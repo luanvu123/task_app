@@ -8,6 +8,14 @@ use Illuminate\Support\Str;
 
 class ItemCategoryController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:item-category-list|item-category-create|item-category-edit|item-category-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:item-category-create', ['only' => ['create','store']]);
+        $this->middleware('permission:item-category-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:item-category-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:item-category-toggle-active', ['only' => ['toggleActive']]);
+    }
     /**
      * Display a listing of the resource.
      */

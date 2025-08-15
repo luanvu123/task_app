@@ -18,6 +18,20 @@ use Illuminate\Http\JsonResponse;
 
 class ProposesController extends Controller
 {
+     function __construct()
+    {
+        $this->middleware('permission:propose-list|propose-create|propose-edit|propose-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:propose-create', ['only' => ['create','store']]);
+        $this->middleware('permission:propose-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:propose-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:propose-submit', ['only' => ['submit']]);
+        $this->middleware('permission:propose-review', ['only' => ['review']]);
+        $this->middleware('permission:propose-approve', ['only' => ['approve']]);
+        $this->middleware('permission:propose-cancel', ['only' => ['cancel']]);
+        $this->middleware('permission:propose-statistics', ['only' => ['statistics']]);
+        $this->middleware('permission:propose-export', ['only' => ['export']]);
+        $this->middleware('permission:propose-download-attachment', ['only' => ['downloadAttachment']]);
+    }
     /**
      * Display a listing of the proposes.
      */

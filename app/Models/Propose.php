@@ -261,4 +261,44 @@ public function getStatusText(): string
 
     return $statusTexts[$this->status] ?? 'Không xác định';
 }
+// Thêm các method này vào class Propose
+
+public function getProposeTypeText(): string
+{
+    $typeTexts = [
+        self::TYPE_EQUIPMENT => 'Thiết bị',
+        self::TYPE_SUPPLIES => 'Vật tư',
+        self::TYPE_SERVICES => 'Dịch vụ',
+        self::TYPE_SOFTWARE => 'Phần mềm',
+        self::TYPE_TRAINING => 'Đào tạo',
+        self::TYPE_TRAVEL => 'Đi lại',
+        self::TYPE_OTHER => 'Khác',
+    ];
+
+    return $typeTexts[$this->propose_type] ?? 'Không xác định';
+}
+
+public function getBudgetSourceText(): string
+{
+    $sourceTexts = [
+        'project_budget' => 'Ngân sách dự án',
+        'department_budget' => 'Ngân sách bộ phận',
+        'additional_budget' => 'Ngân sách bổ sung',
+        'external_funding' => 'Nguồn bên ngoài',
+    ];
+
+    return $sourceTexts[$this->budget_source] ?? 'Không xác định';
+}
+
+public function getPriorityText(): string
+{
+    $priorityTexts = [
+        self::PRIORITY_LOW => 'Thấp',
+        self::PRIORITY_MEDIUM => 'Trung bình',
+        self::PRIORITY_HIGH => 'Cao',
+        self::PRIORITY_URGENT => 'Khẩn cấp',
+    ];
+
+    return $priorityTexts[$this->priority] ?? 'Không xác định';
+}
 }

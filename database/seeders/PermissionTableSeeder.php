@@ -217,7 +217,90 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'report-export',
                 'description' => 'Xuất báo cáo ra file'
             ],
+  [
+                'name' => 'vendor-list',
+                'description' => 'Xem danh sách nhà cung cấp'
+            ],
+            [
+                'name' => 'vendor-create',
+                'description' => 'Tạo nhà cung cấp mới'
+            ],
+            [
+                'name' => 'vendor-edit',
+                'description' => 'Chỉnh sửa thông tin nhà cung cấp'
+            ],
+            [
+                'name' => 'vendor-delete',
+                'description' => 'Xóa nhà cung cấp'
+            ],
 
+            // Item Category permissions - Quyền quản lý danh mục sản phẩm
+            [
+                'name' => 'item-category-list',
+                'description' => 'Xem danh sách danh mục sản phẩm'
+            ],
+            [
+                'name' => 'item-category-create',
+                'description' => 'Tạo danh mục sản phẩm mới'
+            ],
+            [
+                'name' => 'item-category-edit',
+                'description' => 'Chỉnh sửa danh mục sản phẩm'
+            ],
+            [
+                'name' => 'item-category-delete',
+                'description' => 'Xóa danh mục sản phẩm'
+            ],
+            [
+                'name' => 'item-category-toggle-active',
+                'description' => 'Bật/tắt trạng thái hoạt động danh mục sản phẩm'
+            ],
+
+            // Propose permissions - Quyền quản lý đề xuất
+            [
+                'name' => 'propose-list',
+                'description' => 'Xem danh sách đề xuất'
+            ],
+            [
+                'name' => 'propose-create',
+                'description' => 'Tạo đề xuất mới'
+            ],
+            [
+                'name' => 'propose-edit',
+                'description' => 'Chỉnh sửa đề xuất'
+            ],
+            [
+                'name' => 'propose-delete',
+                'description' => 'Xóa đề xuất'
+            ],
+            [
+                'name' => 'propose-submit',
+                'description' => 'Gửi đề xuất để xem xét'
+            ],
+            [
+                'name' => 'propose-review',
+                'description' => 'Xem xét và đánh giá đề xuất'
+            ],
+            [
+                'name' => 'propose-approve',
+                'description' => 'Phê duyệt/từ chối đề xuất'
+            ],
+            [
+                'name' => 'propose-cancel',
+                'description' => 'Hủy đề xuất'
+            ],
+            [
+                'name' => 'propose-statistics',
+                'description' => 'Xem thống kê đề xuất'
+            ],
+            [
+                'name' => 'propose-export',
+                'description' => 'Xuất dữ liệu đề xuất'
+            ],
+            [
+                'name' => 'propose-download-attachment',
+                'description' => 'Tải xuống tệp đính kèm đề xuất'
+            ],
             // System permissions - Quyền hệ thống
             [
                 'name' => 'system-settings',

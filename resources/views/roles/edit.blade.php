@@ -426,7 +426,201 @@
                                     @endif
                                 </td>
                             </tr>
+<!-- Vendor Permissions - THÊM ĐOẠN NÀY VÀO SAU Message Permissions -->
+<tr>
+    <td class="fw-bold bg-light">Nhà Cung Cấp</td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-list')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-create')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-edit')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-delete')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center text-muted">-</td>
+</tr>
 
+<!-- Item Category Permissions -->
+<tr>
+    <td class="fw-bold bg-light">Danh Mục Sản Phẩm</td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'item-category-list')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'item-category-create')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'item-category-edit')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'item-category-delete')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'item-category-toggle-active')->first(); @endphp
+        @if($perm)
+        <div class="form-check d-inline-block">
+            <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                   class="form-check-input permission-checkbox" id="toggle{{$perm->id}}"
+                   {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+            <label class="form-check-label small" for="toggle{{$perm->id}}">Bật/Tắt</label>
+        </div>
+        @endif
+    </td>
+</tr>
+
+<!-- Propose Permissions -->
+<tr>
+    <td class="fw-bold bg-light">Đề Xuất</td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'propose-list')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'propose-create')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'propose-edit')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'propose-delete')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+               class="form-check-input permission-checkbox"
+               {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+        @endif
+    </td>
+    <td class="text-center">
+        <div class="d-flex flex-wrap justify-content-center gap-1">
+            @php $perm = $permission->where('name', 'propose-submit')->first(); @endphp
+            @if($perm)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                       class="form-check-input permission-checkbox" id="submit{{$perm->id}}"
+                       {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+                <label class="form-check-label small" for="submit{{$perm->id}}">Gửi</label>
+            </div>
+            @endif
+
+            @php $perm = $permission->where('name', 'propose-review')->first(); @endphp
+            @if($perm)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                       class="form-check-input permission-checkbox" id="review{{$perm->id}}"
+                       {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+                <label class="form-check-label small" for="review{{$perm->id}}">Xem Xét</label>
+            </div>
+            @endif
+
+            @php $perm = $permission->where('name', 'propose-approve')->first(); @endphp
+            @if($perm)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                       class="form-check-input permission-checkbox" id="approve{{$perm->id}}"
+                       {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+                <label class="form-check-label small" for="approve{{$perm->id}}">Phê Duyệt</label>
+            </div>
+            @endif
+
+            @php $perm = $permission->where('name', 'propose-cancel')->first(); @endphp
+            @if($perm)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                       class="form-check-input permission-checkbox" id="cancel{{$perm->id}}"
+                       {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+                <label class="form-check-label small" for="cancel{{$perm->id}}">Hủy</label>
+            </div>
+            @endif
+
+            @php $perm = $permission->where('name', 'propose-statistics')->first(); @endphp
+            @if($perm)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                       class="form-check-input permission-checkbox" id="statistics{{$perm->id}}"
+                       {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+                <label class="form-check-label small" for="statistics{{$perm->id}}">Thống Kê</label>
+            </div>
+            @endif
+
+            @php $perm = $permission->where('name', 'propose-export')->first(); @endphp
+            @if($perm)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                       class="form-check-input permission-checkbox" id="export{{$perm->id}}"
+                       {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+                <label class="form-check-label small" for="export{{$perm->id}}">Xuất</label>
+            </div>
+            @endif
+
+            @php $perm = $permission->where('name', 'propose-download-attachment')->first(); @endphp
+            @if($perm)
+            <div class="form-check form-check-inline">
+                <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}"
+                       class="form-check-input permission-checkbox" id="download{{$perm->id}}"
+                       {{ in_array($perm->id, $rolePermissions) ? 'checked' : ''}}>
+                <label class="form-check-label small" for="download{{$perm->id}}">Tải Xuống</label>
+            </div>
+            @endif
+        </div>
+    </td>
+</tr>
                             <!-- Message Permissions -->
                             <tr>
                                 <td class="fw-bold bg-light">Tin Nhắn</td>

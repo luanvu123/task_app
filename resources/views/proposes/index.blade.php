@@ -62,6 +62,7 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                         <th>#</th>
                                         <th>Mã đề xuất</th>
                                         <th>Tiêu đề</th>
                                         <th>Dự án</th>
@@ -76,6 +77,7 @@
                                 <tbody>
                                     @forelse($proposes as $propose)
                                         <tr>
+                                               <td>{{ $loop->iteration + ($proposes->currentPage() - 1) * $proposes->perPage() }}</td>
                                             <td>{{ $propose->propose_code }}</td>
                                             <td>
                                                 <a href="{{ route('proposes.show', $propose) }}">

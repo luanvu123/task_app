@@ -441,6 +441,60 @@
                                     </div>
                                 </td>
                             </tr>
+<!-- Vendor Permissions -->
+<tr>
+    <td class="fw-bold bg-light">Nhà Cung Cấp</td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-list')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-create')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-edit')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">
+        @endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'vendor-delete')->first(); @endphp
+        @if($perm)
+        <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">
+        @endif
+    </td>
+    <td class="text-center text-muted">-</td>
+</tr>
+<!-- Item Category Permissions -->
+<tr>
+    <td class="fw-bold bg-light">Danh Mục Sản Phẩm</td>
+    <td class="text-center">@php $perm = $permission->where('name', 'item-category-list')->first(); @endphp
+        @if($perm)<input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">@endif
+    </td>
+    <td class="text-center">@php $perm = $permission->where('name', 'item-category-create')->first(); @endphp
+        @if($perm)<input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">@endif
+    </td>
+    <td class="text-center">@php $perm = $permission->where('name', 'item-category-edit')->first(); @endphp
+        @if($perm)<input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">@endif
+    </td>
+    <td class="text-center">@php $perm = $permission->where('name', 'item-category-delete')->first(); @endphp
+        @if($perm)<input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox">@endif
+    </td>
+    <td class="text-center">
+        @php $perm = $permission->where('name', 'item-category-toggle-active')->first(); @endphp
+        @if($perm)
+        <div class="form-check d-inline-block">
+            <input type="checkbox" name="permission[{{$perm->id}}]" value="{{$perm->id}}" class="form-check-input permission-checkbox" id="toggleactive_{{$perm->id}}">
+            <label class="form-check-label small" for="toggleactive_{{$perm->id}}">Bật/Tắt</label>
+        </div>
+        @endif
+    </td>
+</tr>
 
                             <!-- Report Permissions -->
                             <tr>
