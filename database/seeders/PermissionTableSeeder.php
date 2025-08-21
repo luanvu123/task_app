@@ -301,6 +301,76 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'propose-download-attachment',
                 'description' => 'Tải xuống tệp đính kèm đề xuất'
             ],
+              [
+                'name' => 'reportmanager-list',
+                'description' => 'Xem danh sách báo cáo trong hệ thống'
+            ],
+            [
+                'name' => 'reportmanager-create',
+                'description' => 'Tạo mới báo cáo'
+            ],
+            [
+                'name' => 'reportmanager-edit',
+                'description' => 'Chỉnh sửa thông tin báo cáo'
+            ],
+            [
+                'name' => 'reportmanager-delete',
+                'description' => 'Xóa báo cáo khỏi hệ thống'
+            ],
+            [
+                'name' => 'reportmanager-approve',
+                'description' => 'Duyệt báo cáo'
+            ],
+            [
+                'name' => 'reportmanager-reject',
+                'description' => 'Từ chối báo cáo'
+            ],
+            [
+                'name' => 'reportmanager-download-attachment',
+                'description' => 'Tải xuống tệp đính kèm báo cáo'
+            ],
+            [
+                'name' => 'reportmanager-manage-attachment',
+                'description' => 'Quản lý tệp đính kèm báo cáo'
+            ],
+
+            // Customer permissions - Quyền quản lý khách hàng
+            [
+                'name' => 'customer-list',
+                'description' => 'Xem danh sách khách hàng trong hệ thống'
+            ],
+            [
+                'name' => 'customer-create',
+                'description' => 'Tạo mới thông tin khách hàng'
+            ],
+            [
+                'name' => 'customer-edit',
+                'description' => 'Chỉnh sửa thông tin khách hàng'
+            ],
+            [
+                'name' => 'customer-delete',
+                'description' => 'Xóa khách hàng khỏi hệ thống'
+            ],
+            [
+                'name' => 'customer-search',
+                'description' => 'Tìm kiếm khách hàng (AJAX/Select2)'
+            ],
+            [
+                'name' => 'customer-export',
+                'description' => 'Xuất dữ liệu khách hàng'
+            ],
+            [
+                'name' => 'customer-import',
+                'description' => 'Nhập dữ liệu khách hàng'
+            ],
+            [
+                'name' => 'customer-bulk-action',
+                'description' => 'Thực hiện các hành động hàng loạt với khách hàng'
+            ],
+            [
+                'name' => 'customer-reports',
+                'description' => 'Xem báo cáo thống kê khách hàng'
+            ],
             // System permissions - Quyền hệ thống
             [
                 'name' => 'system-settings',

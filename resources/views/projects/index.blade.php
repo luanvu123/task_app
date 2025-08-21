@@ -121,6 +121,18 @@
                         </select>
                     </div>
 
+                    <!-- Customer Selection -->
+                    <div class="mb-3">
+                        <label class="form-label">Khách hàng</label>
+                        <select class="form-select" name="customer_id">
+                            <option value="">Chọn khách hàng (Để trống nếu là dự án nội bộ)</option>
+                            @foreach($customers as $customer)
+                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="form-text">Nếu không chọn khách hàng, dự án sẽ được coi là dự án nội bộ.</div>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">Quản lý dự án</label>
                         <select class="form-select" name="manager_id" required>
@@ -223,6 +235,20 @@
                                 <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <!-- Customer Selection for Edit -->
+                    <div class="mb-3">
+                        <label class="form-label">Khách hàng</label>
+                        <select class="form-select" id="edit_customer_id" name="customer_id">
+                            <option value="">Chọn khách hàng (Để trống nếu là dự án nội bộ)</option>
+                            @foreach($customers as $customer)
+                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="form-text">Khách hàng hiện tại: {{ isset($project) ? $project->customer->name : 'Không có' }}</div>
+
+                        <div class="form-text">Nếu không chọn khách hàng, dự án sẽ được coi là dự án nội bộ.</div>
                     </div>
 
                     <div class="mb-3">
@@ -331,6 +357,7 @@
         </div>
     </div>
 </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Edit Project Modal
@@ -339,6 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const projectId = this.getAttribute('data-project-id');
             const projectName = this.getAttribute('data-project-name');
             const departmentId = this.getAttribute('data-department-id');
+            const customerId = this.getAttribute('data-customer-id'); // Add customer ID
             const managerId = this.getAttribute('data-manager-id');
             const startDate = this.getAttribute('data-start-date');
             const endDate = this.getAttribute('data-end-date');
@@ -356,6 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('edit_project_id').value = projectId;
             document.getElementById('edit_project_name').value = projectName;
             document.getElementById('edit_department_id').value = departmentId;
+            document.getElementById('edit_customer_id').value = customerId || ''; // Set customer ID
             document.getElementById('edit_manager_id').value = managerId;
             document.getElementById('edit_start_date').value = startDate;
             document.getElementById('edit_end_date').value = endDate;
@@ -389,6 +418,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
-
 
 

@@ -20,6 +20,7 @@ class Project extends Model
         'description',
         'status',
         'manager_id', // Thêm manager để quản lý dự án
+        'customer_id',
     ];
 
     /**
@@ -273,18 +274,73 @@ class Project extends Model
         return $this->pendingTimesheets()->exists();
     }
     public function proposes()
-{
-    return $this->hasMany(Propose::class);
-}
+    {
+        return $this->hasMany(Propose::class);
+    }
 
-public function getTotalProposedAmount()
-{
-    return $this->proposes()->sum('total_amount');
-}
+    public function getTotalProposedAmount()
+    {
+        return $this->proposes()->sum('total_amount');
+    }
 
-public function getPendingProposes()
-{
-    return $this->proposes()->whereIn('status', ['submitted', 'under_review', 'pending_approval']);
-}
+    public function getPendingProposes()
+    {
+        return $this->proposes()->whereIn('status', ['submitted', 'under_review', 'pending_approval']);
+    }
+    /**
+     * Quan hệ với Customer (Dự án thuộc về một khách hàng)
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Scope để lọc theo khách hàng
+     */
+    public function scopeByCustomer($query, $customerId)
+    {
+        return $query->where('customer_id', $customerId);
+    }
+
+    /**
+     * Scope để lọc dự án có khách hàng
+     */
+    public function scopeWithCustomer($query)
+    {
+        return $query->whereNotNull('customer_id');
+    }
+
+    /**
+     * Scope để lọc dự án không có khách hàng (dự án nội bộ)
+     */
+    public function scopeInternal($query)
+    {
+        return $query->whereNull('customer_id');
+    }
+
+    /**
+     * Kiểm tra xem dự án có khách hàng không
+     */
+    public function hasCustomer()
+    {
+        return !is_null($this->customer_id);
+    }
+
+    /**
+     * Kiểm tra xem đây có phải dự án nội bộ không
+     */
+    public function isInternal()
+    {
+        return is_null($this->customer_id);
+    }
+
+    /**
+     * Lấy tên khách hàng hoặc "Nội bộ" nếu không có khách hàng
+     */
+    public function getCustomerNameAttribute()
+    {
+        return $this->customer ? $this->customer->name : 'Nội bộ';
+    }
 }
 

@@ -143,41 +143,61 @@
                             </li>
                         </ul>
                     </li>
-                  <li class="collapsed
+                    <li
+                        class="collapsed
     {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') ? 'active' : '' }}">
-    <a class="m-link
+                        <a class="m-link
         {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') ? 'active' : '' }}"
-        data-bs-toggle="collapse" data-bs-target="#app-Components-Proposes" href="#">
-        <i class="icofont-contrast"></i> <span>Đề xuất và báo cáo</span>
-        <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
-    </a>
-    <ul class="sub-menu collapse
+                            data-bs-toggle="collapse" data-bs-target="#app-Components-Proposes" href="#">
+                            <i class="icofont-contrast"></i> <span>Đề xuất và báo cáo</span>
+                            <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
+                        </a>
+                        <ul class="sub-menu collapse
         {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') ? 'show' : '' }}"
-        id="app-Components-Proposes">
-        <li class="{{ request()->routeIs('vendors.*') ? 'active' : '' }}">
-            <a class="ms-link {{ request()->routeIs('vendors.*') ? 'active' : '' }}"
-                href="{{ route('vendors.index') }}">
-                <span>Quản lý nhà cung cấp</span>
-            </a>
-        </li>
-        <li class="{{ request()->routeIs('item-categories.*') ? 'active' : '' }}">
-            <a class="ms-link {{ request()->routeIs('item-categories.*') ? 'active' : '' }}"
-                href="{{ route('item-categories.index') }}">
-                <span>Quản lý danh mục hàng hóa</span>
-            </a>
-        </li>
-        <li class="{{ request()->routeIs('proposes.*') ? 'active' : '' }}">
-            <a class="ms-link {{ request()->routeIs('proposes.*') ? 'active' : '' }}"
-                href="{{ route('proposes.index') }}">
-                <span>Quản lý danh mục đề xuất</span>
-            </a>
-        </li>
-    </ul>
-</li>
+                            id="app-Components-Proposes">
+                            <li class="{{ request()->routeIs('vendors.*') ? 'active' : '' }}">
+                                <a class="ms-link {{ request()->routeIs('vendors.*') ? 'active' : '' }}"
+                                    href="{{ route('vendors.index') }}">
+                                    <span>Quản lý nhà cung cấp</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->routeIs('item-categories.*') ? 'active' : '' }}">
+                                <a class="ms-link {{ request()->routeIs('item-categories.*') ? 'active' : '' }}"
+                                    href="{{ route('item-categories.index') }}">
+                                    <span>Quản lý danh mục hàng hóa</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->routeIs('proposes.*') ? 'active' : '' }}">
+                                <a class="ms-link {{ request()->routeIs('proposes.*') ? 'active' : '' }}"
+                                    href="{{ route('proposes.index') }}">
+                                    <span>Quản lý danh mục đề xuất</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="{{ request()->routeIs('notifications.*') ? 'active' : '' }}"><a
                             class="m-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}"
                             href="{{route('notifications.index')}}"><i class="icofont-paint"></i>
                             <span>Thông báo</span></a></li>
+
+                    <li class="collapsed">
+                        <a class="m-link" data-bs-toggle="collapse" data-bs-target="#app-Components" href="#"
+                            aria-expanded="true">
+                            <i class="icofont-contrast"></i> <span>Báo cáo giám đốc</span> <span
+                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
+                        <!-- Menu: Sub menu ul -->
+                        <ul class="sub-menu" id="app-Components" style="">
+                            <li><a class="ms-link" href="{{route('reportManagers.index')}}"> <span>Danh sách đơn báo
+                                        cáo</span></a></li>
+                            <li><a class="ms-link" href="{{route('reportManagers.create')}}"> <span>Tạo báo
+                                        cáo</span></a></li>
+                        </ul>
+
+                    </li>
+                      <li class="{{ request()->routeIs('customers.*') ? 'active' : '' }}"><a
+                            class="m-link {{ request()->routeIs('customers.*') ? 'active' : '' }}"
+                            href="{{route('customers.index')}}"><i class="icofont-paint"></i>
+                            <span>Khách hàng </span></a></li>
                 </ul>
 
 

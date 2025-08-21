@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Project;
 use App\Models\Department;
 use App\Models\User;
@@ -10,22 +11,22 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
-       function __construct()
+    function __construct()
     {
-        $this->middleware('permission:project-list|project-create|project-edit|project-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:project-create', ['only' => ['create','store']]);
-        $this->middleware('permission:project-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:project-list|project-create|project-edit|project-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:project-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:project-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:project-delete', ['only' => ['destroy']]);
         $this->middleware('permission:project-list', ['only' => ['getProjectsByStatus']]);
     }
 
     public function index()
     {
-        $projects = Project::with(['department', 'manager', 'members'])->get();
+        $projects = Project::with(['department', 'manager', 'members', 'customer'])->get();
         $departments = Department::all();
         $users = User::all();
-
-        return view('projects.index', compact('projects', 'departments', 'users'));
+        $customers = Customer::all();
+        return view('projects.index', compact('projects', 'departments', 'users', 'customers'));
     }
 
     /**
@@ -35,8 +36,9 @@ class ProjectController extends Controller
     {
         $departments = Department::all();
         $users = User::all();
+        $customers = Customer::all(); // Fetch customers for the form
 
-        return view('projects.create', compact('departments', 'users'));
+        return view('projects.create', compact('departments', 'users', 'customers'));
     }
 
     /**
@@ -47,6 +49,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
+            'customer_id' => 'nullable|exists:customers,id', // Add customer validation
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'budget' => 'nullable|numeric|min:0',
@@ -72,6 +75,7 @@ class ProjectController extends Controller
         $project = Project::create([
             'name' => $validated['name'],
             'department_id' => $validated['department_id'],
+            'customer_id' => $validated['customer_id'], // Add customer_id
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'budget' => $validated['budget'] ?? 0,
@@ -92,9 +96,8 @@ class ProjectController extends Controller
         }
 
         return redirect()->route('projects.index')
-                        ->with('success', 'Dự án đã được tạo thành công!');
+            ->with('success', 'Dự án đã được tạo thành công!');
     }
-
     /**
      * Display the specified resource.
      */
@@ -112,9 +115,10 @@ class ProjectController extends Controller
     {
         $departments = Department::all();
         $users = User::all();
-        $project->load(['department', 'manager', 'members']);
+        $customers = Customer::all(); // Fetch customers for the form
+        $project->load(['department', 'manager', 'members', 'customer']);
 
-        return view('projects.edit', compact('project', 'departments', 'users'));
+        return view('projects.edit', compact('project', 'departments', 'users', 'customers'));
     }
 
     /**
@@ -125,6 +129,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
+            'customer_id' => 'nullable|exists:customers,id', // Add customer validation
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'budget' => 'nullable|numeric|min:0',
@@ -151,6 +156,7 @@ class ProjectController extends Controller
         $project->update([
             'name' => $validated['name'],
             'department_id' => $validated['department_id'],
+            'customer_id' => $validated['customer_id'], // Add customer_id
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'budget' => $validated['budget'] ?? 0,
@@ -169,15 +175,15 @@ class ProjectController extends Controller
                 $memberData[$memberId] = [
                     'role' => 'member',
                     'joined_at' => $project->members()->where('user_id', $memberId)->exists()
-                                    ? $project->members()->where('user_id', $memberId)->first()->pivot->joined_at
-                                    : now()
+                        ? $project->members()->where('user_id', $memberId)->first()->pivot->joined_at
+                        : now()
                 ];
             }
         }
         $project->members()->sync($memberData);
 
         return redirect()->route('projects.index')
-                        ->with('success', 'Dự án đã được cập nhật thành công!');
+            ->with('success', 'Dự án đã được cập nhật thành công!');
     }
 
     /**
@@ -199,7 +205,7 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route('projects.index')
-                        ->with('success', 'Dự án đã được xóa thành công!');
+            ->with('success', 'Dự án đã được xóa thành công!');
     }
 
     /**
@@ -207,7 +213,7 @@ class ProjectController extends Controller
      */
     public function getProjectsByStatus($status = null)
     {
-        $query = Project::with(['department', 'manager', 'members']);
+        $query = Project::with(['department', 'manager', 'members', 'customer']);
 
         if ($status && $status !== 'all') {
             $query->byStatus($status);

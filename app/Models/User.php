@@ -280,11 +280,11 @@ class User extends Authenticatable
         return $this->hasMany(Department::class, 'department_head_id');
     }
 
-     public function projects()
+    public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id')
-                    ->withPivot('role', 'joined_at')
-                    ->withTimestamps();
+            ->withPivot('role', 'joined_at')
+            ->withTimestamps();
     }
 
     /**
@@ -297,125 +297,127 @@ class User extends Authenticatable
 
 
     /**
- * Quan hệ với Task (User được giao nhiều công việc)
- */
-public function tasks()
-{
-    return $this->hasMany(Task::class, 'user_id');
-}
-
-/**
- * Quan hệ với Task đang thực hiện
- */
-public function inProgressTasks()
-{
-    return $this->tasks()->where('status', Task::STATUS_IN_PROGRESS);
-}
-
-/**
- * Quan hệ với Task cần xem xét
- */
-public function needsReviewTasks()
-{
-    return $this->tasks()->where('status', Task::STATUS_NEEDS_REVIEW);
-}
-
-/**
- * Quan hệ với Task đã hoàn thành
- */
-public function completedTasks()
-{
-    return $this->tasks()->where('status', Task::STATUS_COMPLETED);
-}
-
-/**
- * Lấy tasks quá hạn của user
- */
-public function overdueTasks()
-{
-    return $this->tasks()
-        ->where('end_date', '<', now())
-        ->where('status', '!=', Task::STATUS_COMPLETED);
-}
-
-/**
- * Tính tỷ lệ hoàn thành công việc của user
- */
-public function getTaskCompletionRateAttribute()
-{
-    $totalTasks = $this->tasks()->count();
-    if ($totalTasks === 0) {
-        return 0;
+     * Quan hệ với Task (User được giao nhiều công việc)
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'user_id');
     }
 
-    $completedTasks = $this->completedTasks()->count();
-    return round(($completedTasks / $totalTasks) * 100, 2);
-}
-
-/**
- * Lấy số lượng task theo trạng thái
- */
-public function getTaskCountByStatus($status = null)
-{
-    if ($status) {
-        return $this->tasks()->where('status', $status)->count();
+    /**
+     * Quan hệ với Task đang thực hiện
+     */
+    public function inProgressTasks()
+    {
+        return $this->tasks()->where('status', Task::STATUS_IN_PROGRESS);
     }
 
-    return [
-        'total' => $this->tasks()->count(),
-        'in_progress' => $this->inProgressTasks()->count(),
-        'needs_review' => $this->needsReviewTasks()->count(),
-        'completed' => $this->completedTasks()->count(),
-        'overdue' => $this->overdueTasks()->count(),
-    ];
-}
+    /**
+     * Quan hệ với Task cần xem xét
+     */
+    public function needsReviewTasks()
+    {
+        return $this->tasks()->where('status', Task::STATUS_NEEDS_REVIEW);
+    }
 
-/**
- * Kiểm tra user có task nào quá hạn không
- */
-public function hasOverdueTasks()
-{
-    return $this->overdueTasks()->exists();
-}
-public function isDepartmentHead()
-{
-    return $this->managedDepartments()->exists();
-}
+    /**
+     * Quan hệ với Task đã hoàn thành
+     */
+    public function completedTasks()
+    {
+        return $this->tasks()->where('status', Task::STATUS_COMPLETED);
+    }
 
-/**
- * Lấy department mà user đang quản lý (sửa lỗi typo)
- */
-public function managedDepartment()
-{
-    return $this->hasOne(Department::class, 'department_head_id');
-}
-public function notifications()
-{
-    return $this->hasMany(Notification::class)->orderByDesc('created_at');
-}
+    /**
+     * Lấy tasks quá hạn của user
+     */
+    public function overdueTasks()
+    {
+        return $this->tasks()
+            ->where('end_date', '<', now())
+            ->where('status', '!=', Task::STATUS_COMPLETED);
+    }
 
-/**
- * Quan hệ với Notifications (người gửi)
- */
-public function sentNotifications()
-{
-    return $this->hasMany(Notification::class, 'from_user_id');
-}
+    /**
+     * Tính tỷ lệ hoàn thành công việc của user
+     */
+    public function getTaskCompletionRateAttribute()
+    {
+        $totalTasks = $this->tasks()->count();
+        if ($totalTasks === 0) {
+            return 0;
+        }
 
-/**
- * Lấy thông báo chưa đọc
- */
-public function unreadNotifications()
-{
-    return $this->notifications()->where('is_read', false);
-}
+        $completedTasks = $this->completedTasks()->count();
+        return round(($completedTasks / $totalTasks) * 100, 2);
+    }
 
-/**
- * Đếm số thông báo chưa đọc
- */
-public function getUnreadNotificationsCountAttribute()
-{
-    return $this->unreadNotifications()->count();
-}
-protected $appends = ['unread_notifications_count'];
+    /**
+     * Lấy số lượng task theo trạng thái
+     */
+    public function getTaskCountByStatus($status = null)
+    {
+        if ($status) {
+            return $this->tasks()->where('status', $status)->count();
+        }
+
+        return [
+            'total' => $this->tasks()->count(),
+            'in_progress' => $this->inProgressTasks()->count(),
+            'needs_review' => $this->needsReviewTasks()->count(),
+            'completed' => $this->completedTasks()->count(),
+            'overdue' => $this->overdueTasks()->count(),
+        ];
+    }
+
+    /**
+     * Kiểm tra user có task nào quá hạn không
+     */
+    public function hasOverdueTasks()
+    {
+        return $this->overdueTasks()->exists();
+    }
+    public function isDepartmentHead()
+    {
+        return $this->managedDepartments()->exists();
+    }
+
+    /**
+     * Lấy department mà user đang quản lý (sửa lỗi typo)
+     */
+    public function managedDepartment()
+    {
+        return $this->hasOne(Department::class, 'department_head_id');
+    }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class)->orderByDesc('created_at');
+    }
+
+    /**
+     * Quan hệ với Notifications (người gửi)
+     */
+    public function sentNotifications()
+    {
+        return $this->hasMany(Notification::class, 'from_user_id');
+    }
+
+    /**
+     * Lấy thông báo chưa đọc
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->where('is_read', false);
+    }
+
+    /**
+     * Đếm số thông báo chưa đọc
+     */
+    public function getUnreadNotificationsCountAttribute()
+    {
+        return $this->unreadNotifications()->count();
+    }
+    protected $appends = ['unread_notifications_count'];
+
+    
 }

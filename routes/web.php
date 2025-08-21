@@ -1,16 +1,17 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProposesController;
+use App\Http\Controllers\ReportManagerController;
 use App\Http\Controllers\SalaryslipController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimesheetController;
@@ -31,9 +32,36 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('timesheets', TimesheetController::class);
     Route::resource('salaryslips', SalaryslipController::class);
     Route::resource('vendors', VendorController::class);
-     Route::resource('item-categories', ItemCategoryController::class);
-       Route::resource('proposes', ProposesController::class);
+    Route::resource('item-categories', ItemCategoryController::class);
+    Route::resource('proposes', ProposesController::class);
+    Route::resource('reportManagers', ReportManagerController::class);
+    Route::resource('customers', CustomerController::class);
+    // Additional routes for report management
+     Route::group(['prefix' => 'customers'], function () {
+        // Search customers for select2/ajax
+        Route::get('/search/ajax', [CustomerController::class, 'search'])->name('customers.search');
 
+        // Export customers
+        Route::get('/export', [CustomerController::class, 'export'])->name('customers.export');
+
+        // Bulk actions
+        Route::post('/bulk-action', [CustomerController::class, 'bulkAction'])->name('customers.bulk-action');
+
+        // Customer statistics/reports
+        Route::get('/reports', [CustomerController::class, 'reports'])->name('customers.reports');
+
+        // Import customers
+        Route::get('/import', [CustomerController::class, 'showImportForm'])->name('customers.import.form');
+        Route::post('/import', [CustomerController::class, 'import'])->name('customers.import');
+    });
+    Route::post('reportManagers/{reportManager}/approve', [ReportManagerController::class, 'approve'])
+        ->name('reportManagers.approve');
+    Route::post('reportManagers/{reportManager}/reject', [ReportManagerController::class, 'reject'])
+        ->name('reportManagers.reject');
+    Route::get('reportManagers/{reportManager}/attachment/{index}', [ReportManagerController::class, 'downloadAttachment'])
+        ->name('reportManagers.downloadAttachment');
+    Route::delete('reportManagers/{reportManager}/attachment/{index}', [ReportManagerController::class, 'removeAttachment'])
+        ->name('reportManagers.removeAttachment');
     // Additional propose actions
     Route::prefix('proposes')->name('proposes.')->group(function () {
 
@@ -72,8 +100,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::get('proposes/{propose}/download-attachment/{index}', [ProposesController::class, 'downloadAttachment'])->name('proposes.download-attachment');
     Route::patch('item-categories/{itemCategory}/toggle-active', [ItemCategoryController::class, 'toggleActive'])
-         ->name('item-categories.toggle-active');
-  Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        ->name('item-categories.toggle-active');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/unread', [NotificationController::class, 'getUnreadNotifications'])->name('notifications.unread');
     Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
     Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
@@ -81,10 +109,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/notifications/load-more', [NotificationController::class, 'loadMore'])->name('notifications.load-more');
     // Additional routes
     Route::patch('salaryslips/{salaryslip}/status', [SalaryslipController::class, 'updateStatus'])
-         ->name('salaryslips.updateStatus');
+        ->name('salaryslips.updateStatus');
 
     Route::get('salaryslips/{salaryslip}/print', [SalaryslipController::class, 'print'])
-         ->name('salaryslips.print');
+        ->name('salaryslips.print');
     Route::post('timesheets/{timesheet}/submit', [TimesheetController::class, 'submit'])->name('timesheets.submit');
     Route::get('/leaders', [UserController::class, 'leader'])->name('users.leaders');
     Route::get('/users/leaders/{id}/staff-and-project', [UserController::class, 'getStaffAndProject'])
