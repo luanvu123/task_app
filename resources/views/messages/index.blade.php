@@ -36,8 +36,8 @@
                                                         $otherUser = $conversation->participants->where('id', '!=', $currentUser->id)->first();
                                                     @endphp
                                                     @if($otherUser)
-                                                        @if($otherUser->image_url)
-                                                            <img class="avatar rounded-circle" src="{{ $otherUser->image_url }}" alt="">
+                                                        @if($otherUser->image)
+                                                            <img class="avatar rounded-circle" src="{{ asset('storage/' . $otherUser->image) }}" alt="">
                                                         @else
                                                             <div class="avatar rounded-circle no-thumbnail">
                                                                 {{ strtoupper(substr($otherUser->name, 0, 2)) }}
@@ -135,8 +135,8 @@
                                                 @csrf
                                                 <input type="hidden" name="user_id" value="{{ $user->id }}">
                                                 <button type="submit" class="btn btn-link p-0 d-flex w-100 text-decoration-none">
-                                                    @if($user->image_url)
-                                                        <img class="avatar rounded-circle" src="{{ $user->image_url }}" alt="">
+                                                    @if($user->image)
+                                                        <img class="avatar rounded-circle" src="{{ asset('storage/' . $user->image) }}" alt="">
                                                     @else
                                                         <div class="avatar rounded-circle no-thumbnail">{{ strtoupper(substr($user->name, 0, 2)) }}</div>
                                                     @endif
@@ -174,8 +174,8 @@
                                             $otherUser = $currentConversation->participants->where('id', '!=', $currentUser->id)->first();
                                         @endphp
                                         @if($otherUser)
-                                            @if($otherUser->image_url)
-                                                <img class="avatar rounded" src="{{ $otherUser->image_url }}" alt="avatar">
+                                            @if($otherUser->image)
+                                                <img class="avatar rounded" src="{{ asset('storage/' . $otherUser->image) }}" alt="avatar">
                                             @else
                                                 <div class="avatar rounded no-thumbnail">{{ strtoupper(substr($otherUser->name, 0, 2)) }}</div>
                                             @endif
@@ -215,8 +215,8 @@
                                         <div class="max-width-70 {{ $message->user_id == $currentUser->id ? 'text-right' : '' }}">
                                             @if($message->user_id != $currentUser->id)
                                                 <div class="user-info mb-1">
-                                                    @if($message->user->image_url)
-                                                        <img class="avatar sm rounded-circle me-1" src="{{ $message->user->image_url }}" alt="avatar">
+                                                    @if($message->user->image)
+                                                        <img src="{{ $message->user->image ? asset('storage/' . $message->user->image) : asset('assets/images/lg/avatar3.jpg') }}" alt="avatar" class="avatar sm rounded-circle me-1">
                                                     @else
                                                         <div class="avatar sm rounded-circle me-1 no-thumbnail">{{ strtoupper(substr($message->user->name, 0, 1)) }}</div>
                                                     @endif

@@ -48,11 +48,9 @@
                             </div>
                             <div class="teacher-info border-start ps-xl-4 ps-md-3 ps-sm-4 ps-4 w-100">
                                 <h6 class="mb-0 mt-2 fw-bold d-block fs-6">{{ $user->name }}</h6>
-                                <span
-                                    class="py-1 fw-bold small-11 mb-0 mt-1 text-muted">{{ $user->position ?? 'Chưa có chức vụ' }}</span>
+                                <span class="py-1 fw-bold small-11 mb-0 mt-1 text-muted">{{ $user->position ?? 'Chưa có chức vụ' }}</span>
                                 <div class="mt-2 mb-3">
-                                    <span
-                                        class="badge {{ $user->status == 'active' ? 'bg-success' : ($user->status == 'inactive' ? 'bg-warning' : 'bg-danger') }}">
+                                    <span class="badge {{ $user->status == 'active' ? 'bg-success' : ($user->status == 'inactive' ? 'bg-warning' : 'bg-danger') }}">
                                         {{ $user->status_text }}
                                     </span>
                                 </div>
@@ -95,155 +93,164 @@
                             </div>
                         </div>
                     </div>
-                    <h6 class="fw-bold  py-3 mb-3">Current Work Project</h6>
+
+                    <!-- Current Work Projects -->
+                    <div class="d-flex justify-content-between align-items-center py-3 mb-3">
+                        <h6 class="fw-bold mb-0">Current Work Project</h6>
+                        <div class="text-muted small">
+                            <i class="icofont-ui-folder"></i> {{ $projectStats['total_projects'] }} dự án
+                            @if($projectStats['managed_projects'] > 0)
+                                | <i class="icofont-crown"></i> {{ $projectStats['managed_projects'] }} quản lý
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="teachercourse-list">
                         <div class="row g-3 gy-5 py-3 row-deck">
-                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center justify-content-between mt-5">
-                                            <div class="lesson_name">
-                                                <div class="project-block light-info-bg">
-                                                    <i class="icofont-paint"></i>
+                            @forelse($allProjects as $project)
+                                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between mt-5">
+                                                <div class="lesson_name">
+                                                    <div class="project-block {{ $project->priority == 'urgent' ? 'bg-danger' : ($project->priority == 'high' ? 'light-danger-bg' : ($project->priority == 'medium' ? 'light-warning-bg' : 'light-info-bg')) }}">
+                                                        <i class="icofont-{{ $project->priority == 'urgent' ? 'fire-alt' : ($project->priority == 'high' ? 'exclamation-tringle' : 'paint') }}"></i>
+                                                    </div>
+                                                    <span class="small text-muted project_name fw-bold">{{ $project->customer_name ?? 'Nội bộ' }}</span>
+                                                    <h6 class="mb-0 fw-bold fs-6 mb-2">{{ $project->name }}</h6>
                                                 </div>
-                                                <span class="small text-muted project_name fw-bold"> Social Geek Made
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-list avatar-list-stacked pt-2">
+                                                    @if($project->manager)
+                                                        <img class="avatar rounded-circle sm"
+                                                             src="{{ $project->manager->image_url }}"
+                                                             alt="{{ $project->manager->name }}"
+                                                             title="Manager: {{ $project->manager->name }}">
+                                                    @endif
+                                                    @foreach($project->members->take(4) as $member)
+                                                        <img class="avatar rounded-circle sm"
+                                                             src="{{ $member->image_url }}"
+                                                             alt="{{ $member->name }}"
+                                                             title="{{ $member->name }}">
+                                                    @endforeach
+                                                    @if($project->members->count() > 4)
+                                                        <span class="avatar rounded-circle sm text-center bg-secondary text-white">
+                                                            +{{ $project->members->count() - 4 }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="row g-2 pt-4">
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="icofont-tasks"></i>
+                                                        <span class="ms-2">{{ $project->tasks->count() }} Tasks</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="icofont-sand-clock"></i>
+                                                        <span class="ms-2">
+                                                            @if($project->end_date)
+                                                                {{ $project->end_date->diffForHumans() }}
+                                                            @else
+                                                                Không có deadline
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="icofont-group-students"></i>
+                                                        <span class="ms-2">{{ $project->members->count() }} Members</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="icofont-dollar"></i>
+                                                        <span class="ms-2">{{ $project->formatted_budget ?? 'N/A' }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="dividers-block"></div>
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <h4 class="small fw-bold mb-0">Progress</h4>
+                                                <span class="small {{ $project->isOverdue() ? 'light-danger-bg' : 'light-info-bg' }} p-1 rounded">
+                                                    <i class="icofont-ui-clock"></i>
+                                                    @if($project->end_date)
+                                                        {{ $project->end_date > now() ? $project->end_date->diffForHumans() : 'Quá hạn' }}
+                                                    @else
+                                                        Không deadline
+                                                    @endif
                                                 </span>
-                                                <h6 class="mb-0 fw-bold  fs-6  mb-2">UI/UX Design</h6>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-list avatar-list-stacked pt-2">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar2.jpg"
-                                                    alt="">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar1.jpg"
-                                                    alt="">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar3.jpg"
-                                                    alt="">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar4.jpg"
-                                                    alt="">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar8.jpg"
-                                                    alt="">
-                                            </div>
-                                        </div>
-                                        <div class="row g-2 pt-4">
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-paper-clip"></i>
-                                                    <span class="ms-2">5 Attach</span>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar {{ $project->completion_percentage >= 75 ? 'bg-success' : ($project->completion_percentage >= 50 ? 'bg-warning' : 'bg-danger') }}"
+                                                     role="progressbar"
+                                                     style="width: {{ $project->completion_percentage }}%"
+                                                     aria-valuenow="{{ $project->completion_percentage }}"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100">
                                                 </div>
                                             </div>
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-sand-clock"></i>
-                                                    <span class="ms-2">4 Month</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-group-students "></i>
-                                                    <span class="ms-2">5 Members</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-ui-text-chat"></i>
-                                                    <span class="ms-2">10</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="dividers-block"></div>
-                                        <div class="d-flex align-items-center justify-content-between mb-2">
-                                            <h4 class="small fw-bold mb-0">Progress</h4>
-                                            <span class="small light-danger-bg  p-1 rounded"><i
-                                                    class="icofont-ui-clock"></i> 35 Days Left</span>
-                                        </div>
-                                        <div class="progress" style="height: 8px;">
-                                            <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
-                                                aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                                            <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                style="width: 25%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
-                                            </div>
-                                            <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="text-center mt-1">
+                                                <small class="text-muted">{{ $project->completion_percentage }}% hoàn thành</small>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center justify-content-between mt-5">
-                                            <div class="lesson_name">
-                                                <div class="project-block bg-lightgreen">
-                                                    <i class="icofont-vector-path"></i>
-                                                </div>
-                                                <span class="small text-muted project_name fw-bold"> Practice to Perfect
-                                                </span>
-                                                <h6 class="mb-0 fw-bold  fs-6  mb-2">Website Design</h6>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-list avatar-list-stacked pt-2">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar2.jpg"
-                                                    alt="">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar1.jpg"
-                                                    alt="">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar3.jpg"
-                                                    alt="">
-                                                <img class="avatar rounded-circle sm" src="assets/images/xs/avatar4.jpg"
-                                                    alt="">
-                                            </div>
-                                        </div>
-                                        <div class="row g-2 pt-4">
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-paper-clip"></i>
-                                                    <span class="ms-2">4 Attach</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-sand-clock"></i>
-                                                    <span class="ms-2">1 Month</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-group-students "></i>
-                                                    <span class="ms-2">4 Members</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="icofont-ui-text-chat"></i>
-                                                    <span class="ms-2">3</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="dividers-block"></div>
-                                        <div class="d-flex align-items-center justify-content-between mb-2">
-                                            <h4 class="small fw-bold mb-0">Progress</h4>
-                                            <span class="small light-danger-bg  p-1 rounded"><i
-                                                    class="icofont-ui-clock"></i> 15 Days Left</span>
-                                        </div>
-                                        <div class="progress" style="height: 8px;">
-                                            <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%"
-                                                aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                                            <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                style="width: 25%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
-                                            </div>
-                                            <div class="progress-bar bg-secondary ms-1" role="progressbar"
-                                                style="width: 39%" aria-valuenow="39" aria-valuemin="0" aria-valuemax="100">
-                                            </div>
+                            @empty
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body text-center py-5">
+                                            <i class="icofont-folder-open fs-1 text-muted mb-3"></i>
+                                            <h6 class="text-muted">Chưa có dự án nào</h6>
+                                            <p class="small text-muted">Nhân viên này chưa tham gia dự án nào.</p>
                                         </div>
                                     </div>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <!-- Task Statistics -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-primary">{{ $taskStats['total'] }}</h5>
+                                    <small class="text-muted">Tổng tasks</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-warning">{{ $taskStats['in_progress'] }}</h5>
+                                    <small class="text-muted">Đang làm</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-success">{{ $taskStats['completed'] }}</h5>
+                                    <small class="text-muted">Hoàn thành</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-danger">{{ $taskStats['overdue'] }}</h5>
+                                    <small class="text-muted">Quá hạn</small>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Personal & Bank Info -->
+                    <!-- Personal & Bank Info (giữ nguyên như cũ) -->
                     <div class="row g-3">
                         <!-- Personal Information -->
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12">
@@ -278,8 +285,7 @@
                                                 <span class="fw-bold">Tình trạng hôn nhân</span>
                                             </div>
                                             <div class="col-6">
-                                                <span
-                                                    class="text-muted">{{ $user->marital_status_text ?? 'Chưa có' }}</span>
+                                                <span class="text-muted">{{ $user->marital_status_text ?? 'Chưa có' }}</span>
                                             </div>
                                         </li>
                                         <li class="row flex-wrap mb-3">
@@ -287,8 +293,7 @@
                                                 <span class="fw-bold">Số hộ chiếu</span>
                                             </div>
                                             <div class="col-6">
-                                                <span
-                                                    class="text-muted">{{ $user->passport_no ? str_repeat('*', strlen($user->passport_no) - 4) . substr($user->passport_no, -4) : 'Chưa có' }}</span>
+                                                <span class="text-muted">{{ $user->passport_no ? str_repeat('*', strlen($user->passport_no) - 4) . substr($user->passport_no, -4) : 'Chưa có' }}</span>
                                             </div>
                                         </li>
                                         <li class="row flex-wrap">
@@ -366,81 +371,72 @@
                 <!-- Right Sidebar -->
                 <div class="col-xl-4 col-lg-12 col-md-12">
                     <div class="card mb-3">
-                        <div class="card-header py-3">
-                            <h6 class="mb-0 fw-bold ">Current Task</h6>
+                        <div class="card-header py-3 d-flex justify-content-between">
+                            <h6 class="mb-0 fw-bold">Current Task</h6>
+                            <span class="badge bg-primary">{{ $taskStats['completion_rate'] }}% hoàn thành</span>
                         </div>
                         <div class="card-body">
                             <div class="planned_task client_task">
                                 <div class="dd" data-plugin="nestable">
                                     <ol class="dd-list" style="padding-left: 0rem;">
-                                        <li class="dd-item mb-3">
-                                            <div class="dd-handle">
-                                                <div class="task-info d-flex align-items-center justify-content-between">
-                                                    <h6
-                                                        class="light-info-bg py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">
-                                                        UI/UX Design</h6>
-                                                    <div
-                                                        class="task-priority d-flex flex-column align-items-center justify-content-center">
-                                                        <div class="avatar-list avatar-list-stacked m-0">
-                                                            <img class="avatar rounded-circle small-avt sm"
-                                                                src="assets/images/xs/avatar2.jpg" alt="">
-                                                            <img class="avatar rounded-circle small-avt sm"
-                                                                src="assets/images/xs/avatar1.jpg" alt="">
+                                        @forelse($currentTasks as $task)
+                                            <li class="dd-item mb-3">
+                                                <div class="dd-handle">
+                                                    <div class="task-info d-flex align-items-center justify-content-between">
+                                                        <h6 class="{{ $task->getPriorityBadgeColor() == 'bg-dark' ? 'bg-dark text-white' : $task->getStatusBadgeColor() }} py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">
+                                                            {{ $task->name }}
+                                                        </h6>
+                                                        <div class="task-priority d-flex flex-column align-items-center justify-content-center">
+                                                            <div class="avatar-list avatar-list-stacked m-0">
+                                                                <img class="avatar rounded-circle small-avt sm"
+                                                                     src="{{ $task->assignee->image_url }}"
+                                                                     alt="{{ $task->assignee->name }}"
+                                                                     title="{{ $task->assignee->name }}">
+                                                            </div>
+                                                            <span class="badge {{ $task->status == 'in_progress' ? 'bg-warning' : ($task->status == 'needs_review' ? 'bg-info' : 'bg-success') }} text-end mt-1">
+                                                                {{ $task->getStatuses()[$task->status] ?? $task->status }}
+                                                            </span>
                                                         </div>
-                                                        <span class="badge bg-warning text-end mt-1">Inprogress</span>
                                                     </div>
-                                                </div>
-                                                <p class="py-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                    elit. In id
-                                                    nec scelerisque massa.</p>
-                                                <div class="tikit-info row g-3 align-items-center">
-                                                    <div class="col-sm">
-                                                    </div>
-                                                    <div class="col-sm text-end">
-                                                        <div
-                                                            class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
-                                                            Social Geek Made </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </li>
-                                        <li class="dd-item">
-                                            <div class="dd-handle">
-                                                <div class="task-info d-flex align-items-center justify-content-between">
-                                                    <h6
-                                                        class="bg-lightgreen py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">
-                                                        Website Design
-                                                    </h6>
-                                                    <div
-                                                        class="task-priority d-flex flex-column align-items-center justify-content-center">
-                                                        <div class="avatar-list avatar-list-stacked m-0">
-                                                            <img class="avatar rounded-circle small-avt sm"
-                                                                src="assets/images/xs/avatar7.jpg" alt="">
+                                                    <p class="py-2 mb-0">{{ Str::limit($task->description ?? 'Không có mô tả', 100) }}</p>
+                                                    <div class="tikit-info row g-3 align-items-center">
+                                                        <div class="col-sm">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="icofont-ui-calendar text-muted"></i>
+                                                                <span class="ms-2 small text-muted">
+                                                                    @if($task->end_date)
+                                                                        {{ $task->end_date->format('d/m/Y') }}
+                                                                        @if($task->isOverdue())
+                                                                            <span class="text-danger">(Quá hạn)</span>
+                                                                        @endif
+                                                                    @else
+                                                                        Không có deadline
+                                                                    @endif
+                                                                </span>
+                                                            </div>
                                                         </div>
-                                                        <span class="badge bg-danger text-end mt-1">Review</span>
+                                                        <div class="col-sm text-end">
+                                                            <div class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
+                                                                {{ $task->project->name }}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <p class="py-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                    elit. In id
-                                                    nec scelerisque massa.</p>
-                                                <div class="tikit-info row g-3 align-items-center">
-                                                    <div class="col-sm">
-                                                    </div>
-                                                    <div class="col-sm text-end">
-                                                        <div
-                                                            class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
-                                                            Practice to Perfect </div>
-                                                    </div>
+                                            </li>
+                                        @empty
+                                            <li class="dd-item">
+                                                <div class="dd-handle text-center py-4">
+                                                    <i class="icofont-tasks fs-1 text-muted mb-2"></i>
+                                                    <p class="text-muted mb-0">Không có task nào đang thực hiện</p>
                                                 </div>
-                                            </div>
-
-                                        </li>
+                                            </li>
+                                        @endforelse
                                     </ol>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- Profile Status Card -->
                     <div class="card mb-3">
                         <div class="card-header py-3">
@@ -497,9 +493,7 @@
                                 </li>
                             </ul>
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>

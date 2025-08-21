@@ -54,151 +54,173 @@
                 </a>
                 <!-- Menu: main ul -->
 
-                <ul class="menu-list flex-grow-1 mt-3">
-                    <li class="collapsed {{ request()->routeIs('home') ? 'active' : '' }}">
-                        <a class="m-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{route('home')}}">
-                            <i class="icofont-home fs-5"></i> <span>Dashboard</span> </a>
-                    </li>
-                    <li
-                        class="collapsed {{ request()->routeIs('projects.*') || request()->routeIs('tasks.*') || request()->routeIs('timesheets.*') || request()->routeIs('users.leaders') ? 'active' : '' }}">
-                        <a class="m-link {{ request()->routeIs('projects.*') || request()->routeIs('tasks.*') || request()->routeIs('timesheets.*') || request()->routeIs('users.leaders') ? 'active' : '' }}"
-                            data-bs-toggle="collapse" data-bs-target="#project-Components" href="#">
-                            <i class="icofont-briefcase"></i><span>Danh sách dự án</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {{ request()->routeIs('projects.*') || request()->routeIs('tasks.*') || request()->routeIs('timesheets.*') || request()->routeIs('users.leaders') ? 'show' : '' }}"
-                            id="project-Components">
-                            <li class="{{ request()->routeIs('projects.*') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('projects.*') ? 'active' : '' }}"
-                                    href="{{route('projects.index')}}"><span>Danh sách dự án</span></a>
-                            </li>
-                            <li class="{{ request()->routeIs('tasks.*') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('tasks.*') ? 'active' : '' }}"
-                                    href="{{route('tasks.index')}}"><span>Danh sách công việc</span></a>
-                            </li>
-                            <li class="{{ request()->routeIs('timesheets.*') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('timesheets.*') ? 'active' : '' }}"
-                                    href="{{route('timesheets.index')}}"><span>Danh sách bảng chấm
-                                        công</span></a></li>
-                            <li class="{{ request()->routeIs('users.leaders') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('users.leaders') ? 'active' : '' }}"
-                                    href="{{ route('users.leaders') }}"><span>Danh sách lãnh
-                                        đạo</span></a></li>
-                        </ul>
-                    </li>
+               <ul class="menu-list flex-grow-1 mt-3">
+    <!-- Dashboard -->
+    <li class="collapsed {{ request()->routeIs('home') ? 'active' : '' }}">
+        <a class="m-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{route('home')}}">
+            <i class="icofont-home fs-5"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
 
-                    <li
-                        class="collapsed {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') || request()->routeIs('roles.*') || request()->routeIs('departments.*') ? 'active' : '' }}">
-                        <a class="m-link {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') || request()->routeIs('roles.*') || request()->routeIs('departments.*') ? 'active' : '' }}"
-                            data-bs-toggle="collapse" data-bs-target="#tikit-Components" href="#"><i
-                                class="icofont-ticket"></i> <span>Hệ thống</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') || request()->routeIs('roles.*') || request()->routeIs('departments.*') ? 'show' : '' }}"
-                            id="tikit-Components">
-                            <li
-                                class="{{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') ? 'active' : '' }}">
-                                <a class="ms-link {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') ? 'active' : '' }}"
-                                    href="{{ route('users.index') }}"> <span>Quản lý nhân viên</span></a>
-                            </li>
-                            <li class="{{ request()->routeIs('roles.*') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('roles.*') ? 'active' : '' }}"
-                                    href="{{ route('roles.index') }}"> <span>Phân quyền</span></a></li>
-                            <li class="{{ request()->routeIs('departments.*') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('departments.*') ? 'active' : '' }}"
-                                    href="{{route('departments.index')}}"> <span>Danh sách phòng
-                                        ban</span></a>
-                        </ul>
-                    </li>
+    <!-- Quản lý Dự án và Công việc -->
+    <li class="collapsed {{ request()->routeIs('projects.*') || request()->routeIs('tasks.*') || request()->routeIs('timesheets.*') || request()->routeIs('users.leaders') ? 'active' : '' }}">
+        <a class="m-link {{ request()->routeIs('projects.*') || request()->routeIs('tasks.*') || request()->routeIs('timesheets.*') || request()->routeIs('users.leaders') ? 'active' : '' }}"
+            data-bs-toggle="collapse" data-bs-target="#project-Components" href="#">
+            <i class="icofont-briefcase"></i>
+            <span>Quản lý Dự án</span>
+            <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
+        </a>
+        <ul class="sub-menu collapse {{ request()->routeIs('projects.*') || request()->routeIs('tasks.*') || request()->routeIs('timesheets.*') || request()->routeIs('users.leaders') ? 'show' : '' }}"
+            id="project-Components">
+            <li class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('projects.*') ? 'active' : '' }}"
+                    href="{{route('projects.index')}}">
+                    <span>Danh sách dự án</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('tasks.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('tasks.*') ? 'active' : '' }}"
+                    href="{{route('tasks.index')}}">
+                    <span>Quản lý công việc</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('timesheets.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('timesheets.*') ? 'active' : '' }}"
+                    href="{{route('timesheets.index')}}">
+                    <span>Bảng chấm công</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('users.leaders') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('users.leaders') ? 'active' : '' }}"
+                    href="{{ route('users.leaders') }}">
+                    <span>Danh sách lãnh đạo</span>
+                </a>
+            </li>
+        </ul>
+    </li>
 
+    <!-- Quản lý Khách hàng -->
+    <li class="{{ request()->routeIs('customers.*') ? 'active' : '' }}">
+        <a class="m-link {{ request()->routeIs('customers.*') ? 'active' : '' }}"
+            href="{{route('customers.index')}}">
+            <i class="icofont-users-alt-2"></i>
+            <span>Quản lý Khách hàng</span>
+        </a>
+    </li>
 
+    <!-- Quản lý Nhân sự -->
+    <li class="collapsed {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') || request()->routeIs('departments.*') || request()->routeIs('salaryslips.*') ? 'active' : '' }}">
+        <a class="m-link {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') || request()->routeIs('departments.*') || request()->routeIs('salaryslips.*') ? 'active' : '' }}"
+            data-bs-toggle="collapse" data-bs-target="#hr-Components" href="#">
+            <i class="icofont-users-alt-5"></i>
+            <span>Quản lý Nhân sự</span>
+            <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
+        </a>
+        <ul class="sub-menu collapse {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') || request()->routeIs('departments.*') || request()->routeIs('salaryslips.*') ? 'show' : '' }}"
+            id="hr-Components">
+            <li class="{{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show') ? 'active' : '' }}"
+                    href="{{ route('users.index') }}">
+                    <span>Quản lý nhân viên</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('departments.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('departments.*') ? 'active' : '' }}"
+                    href="{{route('departments.index')}}">
+                    <span>Quản lý phòng ban</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('salaryslips.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('salaryslips.*') ? 'active' : '' }}"
+                    href="{{ route('salaryslips.index') }}">
+                    <span>Quản lý lương</span>
+                </a>
+            </li>
+        </ul>
+    </li>
 
+    <!-- Đề xuất và Báo cáo -->
+    <li class="collapsed {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') || request()->routeIs('reportManagers.*') ? 'active' : '' }}">
+        <a class="m-link {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') || request()->routeIs('reportManagers.*') ? 'active' : '' }}"
+            data-bs-toggle="collapse" data-bs-target="#report-Components" href="#">
+            <i class="icofont-file-document"></i>
+            <span>Đề xuất và Báo cáo</span>
+            <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
+        </a>
+        <ul class="sub-menu collapse {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') || request()->routeIs('reportManagers.*') ? 'show' : '' }}"
+            id="report-Components">
+            <li class="{{ request()->routeIs('proposes.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('proposes.*') ? 'active' : '' }}"
+                    href="{{ route('proposes.index') }}">
+                    <span>Quản lý đề xuất</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('reportManagers.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('reportManagers.*') ? 'active' : '' }}"
+                    href="{{route('reportManagers.index')}}">
+                    <span>Báo cáo giám đốc</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('vendors.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('vendors.*') ? 'active' : '' }}"
+                    href="{{ route('vendors.index') }}">
+                    <span>Nhà cung cấp</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('item-categories.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('item-categories.*') ? 'active' : '' }}"
+                    href="{{ route('item-categories.index') }}">
+                    <span>Danh mục hàng hóa</span>
+                </a>
+            </li>
+        </ul>
+    </li>
 
-                    <li class="collapsed {{ request()->routeIs('salaryslips.*') ? 'active' : '' }}">
-                        <a class="m-link {{ request()->routeIs('salaryslips.*') ? 'active' : '' }}"
-                            data-bs-toggle="collapse" data-bs-target="#payroll-Components" href="#"><i
-                                class="icofont-users-alt-5"></i> <span>Payroll</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {{ request()->routeIs('salaryslips.*') ? 'show' : '' }}"
-                            id="payroll-Components">
-                            <li class="{{ request()->routeIs('salaryslips.*') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('salaryslips.*') ? 'active' : '' }}"
-                                    href="{{ route('salaryslips.index') }}"><span>Lịch sử lương</span>
-                                </a></li>
+    <!-- Ứng dụng -->
+    <li class="collapsed {{ request()->routeIs('messages.*') || request()->routeIs('notifications.*') ? 'active' : '' }}">
+        <a class="m-link {{ request()->routeIs('messages.*') || request()->routeIs('notifications.*') ? 'active' : '' }}"
+            data-bs-toggle="collapse" data-bs-target="#app-Components" href="#">
+            <i class="icofont-contrast"></i>
+            <span>Ứng dụng</span>
+            <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
+        </a>
+        <ul class="sub-menu collapse {{ request()->routeIs('messages.*') || request()->routeIs('notifications.*') ? 'show' : '' }}"
+            id="app-Components">
+            <li class="{{ request()->routeIs('messages.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('messages.*') ? 'active' : '' }}"
+                    href="{{route('messages.index')}}">
+                    <span>Chat</span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('notifications.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}"
+                    href="{{route('notifications.index')}}">
+                    <span>Thông báo</span>
+                </a>
+            </li>
+        </ul>
+    </li>
 
-                        </ul>
-                    </li>
-                    <li class="collapsed {{ request()->routeIs('messages.*') ? 'active' : '' }}">
-                        <a class="m-link {{ request()->routeIs('messages.*') ? 'active' : '' }}"
-                            data-bs-toggle="collapse" data-bs-target="#app-Components" href="#">
-                            <i class="icofont-contrast"></i> <span>Ứng dụng</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {{ request()->routeIs('messages.*') ? 'show' : '' }}"
-                            id="app-Components">
-                            <li class="{{ request()->routeIs('messages.*') ? 'active' : '' }}"><a
-                                    class="ms-link {{ request()->routeIs('messages.*') ? 'active' : '' }}"
-                                    href="{{route('messages.index')}}"><span>Ứng dụng Chat</span></a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li
-                        class="collapsed
-    {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') ? 'active' : '' }}">
-                        <a class="m-link
-        {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') ? 'active' : '' }}"
-                            data-bs-toggle="collapse" data-bs-target="#app-Components-Proposes" href="#">
-                            <i class="icofont-contrast"></i> <span>Đề xuất và báo cáo</span>
-                            <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
-                        </a>
-                        <ul class="sub-menu collapse
-        {{ request()->routeIs('vendors.*') || request()->routeIs('item-categories.*') || request()->routeIs('proposes.*') ? 'show' : '' }}"
-                            id="app-Components-Proposes">
-                            <li class="{{ request()->routeIs('vendors.*') ? 'active' : '' }}">
-                                <a class="ms-link {{ request()->routeIs('vendors.*') ? 'active' : '' }}"
-                                    href="{{ route('vendors.index') }}">
-                                    <span>Quản lý nhà cung cấp</span>
-                                </a>
-                            </li>
-                            <li class="{{ request()->routeIs('item-categories.*') ? 'active' : '' }}">
-                                <a class="ms-link {{ request()->routeIs('item-categories.*') ? 'active' : '' }}"
-                                    href="{{ route('item-categories.index') }}">
-                                    <span>Quản lý danh mục hàng hóa</span>
-                                </a>
-                            </li>
-                            <li class="{{ request()->routeIs('proposes.*') ? 'active' : '' }}">
-                                <a class="ms-link {{ request()->routeIs('proposes.*') ? 'active' : '' }}"
-                                    href="{{ route('proposes.index') }}">
-                                    <span>Quản lý danh mục đề xuất</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="{{ request()->routeIs('notifications.*') ? 'active' : '' }}"><a
-                            class="m-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}"
-                            href="{{route('notifications.index')}}"><i class="icofont-paint"></i>
-                            <span>Thông báo</span></a></li>
-
-                    <li class="collapsed">
-                        <a class="m-link" data-bs-toggle="collapse" data-bs-target="#app-Components" href="#"
-                            aria-expanded="true">
-                            <i class="icofont-contrast"></i> <span>Báo cáo giám đốc</span> <span
-                                class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu" id="app-Components" style="">
-                            <li><a class="ms-link" href="{{route('reportManagers.index')}}"> <span>Danh sách đơn báo
-                                        cáo</span></a></li>
-                            <li><a class="ms-link" href="{{route('reportManagers.create')}}"> <span>Tạo báo
-                                        cáo</span></a></li>
-                        </ul>
-
-                    </li>
-                      <li class="{{ request()->routeIs('customers.*') ? 'active' : '' }}"><a
-                            class="m-link {{ request()->routeIs('customers.*') ? 'active' : '' }}"
-                            href="{{route('customers.index')}}"><i class="icofont-paint"></i>
-                            <span>Khách hàng </span></a></li>
-                </ul>
+    <!-- Quản trị Hệ thống -->
+    <li class="collapsed {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+        <a class="m-link {{ request()->routeIs('roles.*') ? 'active' : '' }}"
+            data-bs-toggle="collapse" data-bs-target="#system-Components" href="#">
+            <i class="icofont-settings"></i>
+            <span>Quản trị Hệ thống</span>
+            <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
+        </a>
+        <ul class="sub-menu collapse {{ request()->routeIs('roles.*') ? 'show' : '' }}"
+            id="system-Components">
+            <li class="{{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                <a class="ms-link {{ request()->routeIs('roles.*') ? 'active' : '' }}"
+                    href="{{ route('roles.index') }}">
+                    <span>Phân quyền</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
 
 
 
@@ -218,26 +240,32 @@
                         <!-- header rightbar icon -->
                         <div class="h-right d-flex align-items-center mr-5 mr-lg-0 order-1">
                             <div class="d-flex">
-                                <a class="nav-link text-primary collapsed" href="help.html" title="Get Help">
-                                    <i class="icofont-info-square fs-5"></i>
-                                </a>
-                                <div class="avatar-list avatar-list-stacked px-3">
-                                    <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar2.jpg') }}"
-                                        alt="">
-                                    <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar1.jpg') }}"
-                                        alt="">
-                                    <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar3.jpg') }}"
-                                        alt="">
-                                    <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar4.jpg') }}"
-                                        alt="">
-                                    <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar7.jpg') }}"
-                                        alt="">
-                                    <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar8.jpg') }}"
-                                        alt="">
-                                    <span class="avatar rounded-circle text-center pointer" data-bs-toggle="modal"
-                                        data-bs-target="#addUser"><i class="icofont-ui-add"></i></span>
-                                </div>
-                            </div>
+    <a class="nav-link text-primary collapsed" href="help.html" title="Get Help">
+        <i class="icofont-info-square fs-5"></i>
+    </a>
+    <div class="avatar-list avatar-list-stacked px-3">
+        @if(isset($user_layouts) && $user_layouts->count() > 0)
+            @foreach($user_layouts as $user)
+                <img class="avatar rounded-circle"
+                     src="{{ $user->avatar ? asset('storage/avatars/' . $user->avatar) : asset('assets/images/xs/avatar' . (($loop->index % 8) + 1) . '.jpg') }}"
+                     alt="{{ $user->name }}"
+                     title="{{ $user->name }}">
+            @endforeach
+        @else
+            {{-- Fallback nếu không có user nào --}}
+            <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar2.jpg') }}" alt="">
+            <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar1.jpg') }}" alt="">
+            <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar3.jpg') }}" alt="">
+            <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar4.jpg') }}" alt="">
+            <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar7.jpg') }}" alt="">
+            <img class="avatar rounded-circle" src="{{ asset('assets/images/xs/avatar8.jpg') }}" alt="">
+        @endif
+        <span class="avatar rounded-circle text-center pointer" data-bs-toggle="modal"
+              data-bs-target="#addUser">
+            <i class="icofont-ui-add"></i>
+        </span>
+    </div>
+</div>
                             <!-- Thay thế phần notification dropdown trong layout.app -->
                             <div class="dropdown notifications">
                                 <a class="nav-link dropdown-toggle pulse" href="#" role="button"

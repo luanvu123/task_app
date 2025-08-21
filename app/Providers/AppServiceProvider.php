@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+         View::composer('*', function ($view) {
+            $user_layouts = User::latest('created_at')->limit(6)->get();
+            $view->with('user_layouts', $user_layouts);
+        });
     }
 }

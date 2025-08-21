@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\Project;
+use App\Models\Task;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
@@ -18,6 +20,13 @@ use Illuminate\Support\Arr;
 
 class UserController extends Controller
 {
+     function __construct()
+    {
+         $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:user-create', ['only' => ['create','store']]);
+         $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -238,14 +247,70 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id): View
+   public function show($id): View
     {
         $user = User::findOrFail($id);
 
         // Lấy danh sách roles của user
         $userRoles = $user->getRoleNames();
 
-        return view('users.show', compact('user', 'userRoles'));
+        // Lấy danh sách projects mà user tham gia (bao gồm cả project được quản lý và project tham gia)
+        $userProjects = $user->projects()
+            ->with(['department', 'manager', 'members', 'tasks'])
+            ->where('status', '!=', Project::STATUS_COMPLETED)
+            ->where('status', '!=', Project::STATUS_CANCELLED)
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit(6) // Giới hạn 6 project gần đây nhất
+            ->get();
+
+        // Nếu user là manager, thêm các project mà họ quản lý
+        $managedProjects = $user->managedProjects()
+            ->with(['department', 'manager', 'members', 'tasks'])
+            ->where('status', '!=', Project::STATUS_COMPLETED)
+            ->where('status', '!=', Project::STATUS_CANCELLED)
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit(6)
+            ->get();
+
+        // Merge và loại bỏ duplicate projects
+        $allProjects = $userProjects->merge($managedProjects)->unique('id')->take(6);
+
+        // Lấy danh sách tasks hiện tại của user
+        $currentTasks = $user->tasks()
+            ->with(['project', 'assignee'])
+            ->where('status', '!=', Task::STATUS_COMPLETED)
+            ->orderByRaw("FIELD(priority, 'urgent', 'high', 'medium', 'low')")
+            ->orderBy('end_date', 'asc')
+            ->limit(10) // Giới hạn 10 task gần đây nhất
+            ->get();
+
+        // Lấy thống kê task của user
+        $taskStats = [
+            'total' => $user->tasks()->count(),
+            'in_progress' => $user->inProgressTasks()->count(),
+            'needs_review' => $user->needsReviewTasks()->count(),
+            'completed' => $user->completedTasks()->count(),
+            'overdue' => $user->overdueTasks()->count(),
+            'completion_rate' => $user->task_completion_rate
+        ];
+
+        // Lấy thống kê project
+        $projectStats = [
+            'total_projects' => $allProjects->count(),
+            'managed_projects' => $user->managedProjects()->count(),
+            'participating_projects' => $user->projects()->count(),
+        ];
+
+        return view('users.show', compact(
+            'user',
+            'userRoles',
+            'allProjects',
+            'currentTasks',
+            'taskStats',
+            'projectStats'
+        ));
     }
       public function updatePersonalInfo(Request $request, $id)
     {
